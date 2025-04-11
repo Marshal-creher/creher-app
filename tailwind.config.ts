@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -51,6 +52,16 @@ export default {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
+				},
+				jobseeker: {
+					DEFAULT: '#0EA5E9', // bright blue
+					light: '#BAE6FD',   // light blue
+					dark: '#0369A1',    // dark blue
+				},
+				recruiter: {
+					DEFAULT: '#10B981', // emerald
+					light: '#A7F3D0',   // light emerald
+					dark: '#047857',    // dark emerald
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
