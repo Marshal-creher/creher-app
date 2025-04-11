@@ -53,15 +53,21 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				creher: {
+					navy: '#0D2240',    // dark blue from logo
+					green: '#1D6855',   // green from logo
+					'navy-light': '#1E3A61',
+					'green-light': '#3D8A75',
+				},
 				jobseeker: {
-					DEFAULT: '#0EA5E9', // bright blue
-					light: '#BAE6FD',   // light blue
-					dark: '#0369A1',    // dark blue
+					DEFAULT: '#0D2240', // using CREHER navy
+					light: '#1E3A61',   // lighter navy
+					dark: '#071628',    // darker navy
 				},
 				recruiter: {
-					DEFAULT: '#10B981', // emerald
-					light: '#A7F3D0',   // light emerald
-					dark: '#047857',    // dark emerald
+					DEFAULT: '#1D6855', // using CREHER green
+					light: '#3D8A75',   // lighter green
+					dark: '#124938',    // darker green
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

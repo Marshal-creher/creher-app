@@ -13,7 +13,7 @@ const CTA: React.FC = () => {
             <h2 className="text-3xl font-bold mb-4">Ready to Take the Next Step?</h2>
             <p className="text-gray-700 max-w-2xl mx-auto mb-8">
               Whether you're seeking new opportunities or looking for the right talent, 
-              JobSeeker Compass is here to help you succeed.
+              CREHER is here to help you succeed.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/job-seeker">

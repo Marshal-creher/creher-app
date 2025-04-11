@@ -9,10 +9,11 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link to="/" className="text-xl font-bold flex items-center gap-2">
-              <div className="bg-gradient-to-r from-jobseeker to-recruiter h-8 w-8 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">JC</span>
+              <div className="relative h-8 w-8 rounded-md flex items-center justify-center">
+                <div className="absolute inset-0 bg-creher-navy rounded-md" style={{ clipPath: 'path("M32 0H0V16C0 24.8366 7.16344 32 16 32H32V0Z")' }}></div>
+                <div className="absolute bottom-0 right-0 h-1/2 w-1/2 bg-creher-green rounded-br-md"></div>
               </div>
-              <span>JobSeeker Compass</span>
+              <span className="text-creher-navy">CREHER</span>
             </Link>
             <p className="mt-4 text-gray-600 text-sm">
               Connecting job seekers with the right recruitment consultants.
@@ -32,8 +33,8 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-gray-800 mb-4">For Recruiters</h3>
             <ul className="space-y-2 text-gray-600">
               <li><Link to="/recruiter" className="hover:text-secondary">Consulting Services</Link></li>
-              <li><Link to="/recruiter" className="hover:text-secondary">Talent Solutions</Link></li>
-              <li><Link to="/" className="hover:text-secondary">Recruitment Tools</Link></li>
+              <li><Link to="/recruiter" className="hover:text-secondary">Work Security Audit</Link></li>
+              <li><Link to="/recruiter" className="hover:text-secondary">Law Regulations</Link></li>
             </ul>
           </div>
           
@@ -50,7 +51,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} JobSeeker Compass. All rights reserved.
+            © {new Date().getFullYear()} CREHER. All rights reserved.
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-gray-600">

@@ -40,6 +40,8 @@ const consultingServices = [
   { id: "screening", label: "Candidate Screening & Selection" },
   { id: "assessment", label: "Skills Assessment" },
   { id: "employer-branding", label: "Employer Branding" },
+  { id: "work-security", label: "Work Security Audit & Formation" },
+  { id: "law-regulations", label: "Law Regulations Consulting" },
   { id: "onboarding", label: "Onboarding Optimization" },
   { id: "retention", label: "Employee Retention Strategies" },
   { id: "workforce-planning", label: "Workforce Planning" },

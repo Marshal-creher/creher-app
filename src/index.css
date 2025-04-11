@@ -14,10 +14,10 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 199 89% 48%;
+    --primary: 214 97% 15%;  /* CREHER navy */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 160 84% 39%;
+    --secondary: 159 56% 26%; /* CREHER green */
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96.1%;
@@ -96,14 +96,14 @@
 
 @layer components {
   .hero-gradient {
-    background: linear-gradient(to right, rgba(14, 165, 233, 0.15), rgba(16, 185, 129, 0.15));
+    background: linear-gradient(to right, rgba(13, 34, 64, 0.15), rgba(29, 104, 85, 0.15));
   }
   
   .job-seeker-gradient {
-    background: linear-gradient(to bottom right, #0EA5E9, #0369A1);
+    background: linear-gradient(to bottom right, #0D2240, #071628);
   }
   
   .recruiter-gradient {
-    background: linear-gradient(to bottom right, #10B981, #047857);
+    background: linear-gradient(to bottom right, #1D6855, #124938);
   }
 }

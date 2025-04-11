@@ -9,10 +9,11 @@ const Navbar: React.FC = () => {
     <nav className="w-full bg-white shadow-sm py-4">
       <div className="container mx-auto flex items-center justify-between">
         <Link to="/" className="text-xl font-bold flex items-center gap-2">
-          <div className="bg-gradient-to-r from-jobseeker to-recruiter h-8 w-8 rounded-md flex items-center justify-center">
-            <span className="text-white font-bold">JC</span>
+          <div className="relative h-8 w-8 rounded-md flex items-center justify-center">
+            <div className="absolute inset-0 bg-creher-navy rounded-md" style={{ clipPath: 'path("M32 0H0V16C0 24.8366 7.16344 32 16 32H32V0Z")' }}></div>
+            <div className="absolute bottom-0 right-0 h-1/2 w-1/2 bg-creher-green rounded-br-md"></div>
           </div>
-          <span>JobSeeker Compass</span>
+          <span className="text-creher-navy">CREHER</span>
         </Link>
         <div className="hidden md:flex space-x-4">
           <Link to="/">

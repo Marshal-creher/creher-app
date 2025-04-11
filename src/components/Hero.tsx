@@ -15,7 +15,7 @@ const Hero: React.FC = () => {
             </h1>
             <p className="text-lg text-gray-600">
               Whether you're looking for your next career opportunity or seeking the best talent for your company, 
-              JobSeeker Compass bridges the gap with our specialized platform.
+              CREHER bridges the gap with our specialized platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link to="/job-seeker">

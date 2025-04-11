@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Award, Clock, FileText, MessageSquare, PenSquare, Search, Shield, Star, UserRound, BriefcaseBusiness } from 'lucide-react';
+import { Award, Clock, FileText, MessageSquare, PenSquare, Search, Shield, Star, UserRound, BriefcaseBusiness, Briefcase, Scale, HardHat } from 'lucide-react';
 
 const features = [
   {
@@ -28,21 +28,21 @@ const features = [
     forJobSeeker: true
   },
   {
-    icon: <PenSquare className="h-10 w-10 text-recruiter" />,
-    title: "Consulting Services",
-    description: "Expert recruitment consulting tailored to your company's specific needs and industry.",
-    forJobSeeker: false
-  },
-  {
-    icon: <Search className="h-10 w-10 text-recruiter" />,
-    title: "Talent Matching",
-    description: "Advanced algorithms match you with candidates that fit your requirements perfectly.",
-    forJobSeeker: false
-  },
-  {
-    icon: <Shield className="h-10 w-10 text-recruiter" />,
+    icon: <Briefcase className="h-10 w-10 text-recruiter" />,
     title: "Recruitment Solutions",
-    description: "Comprehensive end-to-end recruitment services and specialized solutions.",
+    description: "Comprehensive recruitment services tailored to your company's needs and industry requirements.",
+    forJobSeeker: false
+  },
+  {
+    icon: <HardHat className="h-10 w-10 text-recruiter" />,
+    title: "Work Security Audit",
+    description: "Thorough assessment and formation on workplace safety and security standards.",
+    forJobSeeker: false
+  },
+  {
+    icon: <Scale className="h-10 w-10 text-recruiter" />,
+    title: "Law Regulations",
+    description: "Expert guidance on employment laws and regulatory compliance for your business.",
     forJobSeeker: false
   },
   {
@@ -58,7 +58,7 @@ const Features: React.FC = () => {
     <section className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">How JobSeeker Compass Works</h2>
+          <h2 className="text-3xl font-bold mb-4">How CREHER Works</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             A comprehensive platform designed to benefit both job seekers and recruiters with powerful features.
           </p>
@@ -94,7 +94,7 @@ const Features: React.FC = () => {
             </div>
             <h3 className="text-xl font-bold mb-2">For Recruiters</h3>
             <p className="text-gray-600 mb-6">
-              Specialized consulting services and tools to optimize your recruitment process and find the best talent.
+              Specialized consulting services and tools to optimize your recruitment process, ensure workplace security, and maintain legal compliance.
             </p>
             <div className="grid grid-cols-1 gap-6">
               {features.filter(f => !f.forJobSeeker).map((feature, index) => (
