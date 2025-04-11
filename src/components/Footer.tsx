@@ -8,12 +8,15 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <Link to="/" className="text-xl font-bold flex items-center gap-2">
-              <div className="relative h-8 w-8 rounded-md flex items-center justify-center">
-                <div className="absolute inset-0 bg-creher-navy rounded-md" style={{ clipPath: 'path("M32 0H0V16C0 24.8366 7.16344 32 16 32H32V0Z")' }}></div>
-                <div className="absolute bottom-0 right-0 h-1/2 w-1/2 bg-creher-green rounded-br-md"></div>
+            <Link to="/" className="flex flex-col items-start">
+              <div className="text-xl font-bold flex items-center gap-2">
+                <div className="relative h-8 w-8 rounded-md flex items-center justify-center">
+                  <div className="absolute inset-0 bg-creher-navy rounded-md" style={{ clipPath: 'path("M32 0H0V16C0 24.8366 7.16344 32 16 32H32V0Z")' }}></div>
+                  <div className="absolute bottom-0 right-0 h-1/2 w-1/2 bg-creher-green rounded-br-md"></div>
+                </div>
+                <span className="text-creher-navy">CREHER</span>
               </div>
-              <span className="text-creher-navy">CREHER</span>
+              <span className="text-xs italic text-gray-600 ml-10">Value Every Relationship</span>
             </Link>
             <p className="mt-4 text-gray-600 text-sm">
               Connecting job seekers with the right recruitment consultants.

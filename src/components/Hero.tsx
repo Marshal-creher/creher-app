@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
               Connecting <span className="text-jobseeker">Job Seekers</span> with <span className="text-recruiter">Recruiters</span>
             </h1>
             <p className="text-lg text-gray-600">
-              Whether you're looking for your next career opportunity or seeking the best talent for your company, 
+              <span className="italic font-medium">Value Every Relationship</span> - Whether you're looking for your next career opportunity or seeking the best talent for your company, 
               CREHER bridges the gap with our specialized platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">

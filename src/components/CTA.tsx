@@ -10,7 +10,8 @@ const CTA: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="bg-gradient-to-r from-jobseeker-light via-white to-recruiter-light rounded-xl overflow-hidden shadow-xl">
           <div className="p-8 md:p-12 text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Take the Next Step?</h2>
+            <h2 className="text-3xl font-bold mb-2">Ready to Take the Next Step?</h2>
+            <p className="text-gray-600 italic mb-4">Value Every Relationship</p>
             <p className="text-gray-700 max-w-2xl mx-auto mb-8">
               Whether you're seeking new opportunities or looking for the right talent, 
               CREHER is here to help you succeed.
