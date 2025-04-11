@@ -3,31 +3,33 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
 import { BriefcaseBusiness, UserRound } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Hero: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <div className="hero-gradient py-20">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="md:w-1/2 space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-              Connecting <span className="text-jobseeker">Job Seekers</span> with <span className="text-recruiter">Recruiters</span>
+              {t('connecting')} <span className="text-jobseeker">{t('job_seekers')}</span> {t('with')} <span className="text-recruiter">{t('recruiters')}</span>
             </h1>
             <p className="text-lg text-gray-600">
-              <span className="italic font-medium">Value Every Relationship</span> - Whether you're looking for your next career opportunity or seeking the best talent for your company, 
-              CREHER bridges the gap with our specialized platform.
+              <span className="italic font-medium">{t('slogan')}</span> - {t('hero_description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Link to="/job-seeker">
                 <Button className="w-full sm:w-auto bg-jobseeker hover:bg-jobseeker-dark text-white h-12 px-6 flex items-center gap-2">
                   <UserRound size={20} />
-                  I'm a Job Seeker
+                  {t('im_a_job_seeker')}
                 </Button>
               </Link>
               <Link to="/recruiter">
                 <Button className="w-full sm:w-auto bg-recruiter hover:bg-recruiter-dark text-white h-12 px-6 flex items-center gap-2">
                   <BriefcaseBusiness size={20} />
-                  I'm a Recruiter
+                  {t('im_a_recruiter')}
                 </Button>
               </Link>
             </div>

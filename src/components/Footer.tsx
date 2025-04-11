@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '@/context/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="bg-gray-50 py-12 border-t">
       <div className="container mx-auto px-4">
@@ -16,45 +19,45 @@ const Footer: React.FC = () => {
                 </div>
                 <span className="text-creher-navy">CREHER</span>
               </div>
-              <span className="text-xs italic text-gray-600 ml-10">Value Every Relationship</span>
+              <span className="text-xs italic text-gray-600 ml-10">{t('slogan')}</span>
             </Link>
             <p className="mt-4 text-gray-600 text-sm">
-              Connecting job seekers with the right recruitment consultants.
+              {t('connecting')} {t('job_seekers')} {t('with')} {t('recruiters')}.
             </p>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-4">For Job Seekers</h3>
+            <h3 className="font-semibold text-gray-800 mb-4">{t('for_job_seekers_title')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li><Link to="/job-seeker" className="hover:text-primary">Create Profile</Link></li>
-              <li><Link to="/job-seeker" className="hover:text-primary">Upload Resume</Link></li>
-              <li><Link to="/" className="hover:text-primary">Career Resources</Link></li>
+              <li><Link to="/job-seeker" className="hover:text-primary">{t('profile_creation')}</Link></li>
+              <li><Link to="/job-seeker" className="hover:text-primary">{t('resume_parsing')}</Link></li>
+              <li><Link to="/" className="hover:text-primary">{t('career_advice')}</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-4">For Recruiters</h3>
+            <h3 className="font-semibold text-gray-800 mb-4">{t('for_recruiters_title')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li><Link to="/recruiter" className="hover:text-secondary">Consulting Services</Link></li>
-              <li><Link to="/recruiter" className="hover:text-secondary">Work Security Audit</Link></li>
-              <li><Link to="/recruiter" className="hover:text-secondary">Law Regulations</Link></li>
+              <li><Link to="/recruiter" className="hover:text-secondary">{t('recruitment_solutions')}</Link></li>
+              <li><Link to="/recruiter" className="hover:text-secondary">{t('work_security_audit')}</Link></li>
+              <li><Link to="/recruiter" className="hover:text-secondary">{t('law_regulations')}</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-800 mb-4">Company</h3>
+            <h3 className="font-semibold text-gray-800 mb-4">{t('company')}</h3>
             <ul className="space-y-2 text-gray-600">
-              <li><Link to="/" className="hover:text-gray-900">About Us</Link></li>
-              <li><Link to="/" className="hover:text-gray-900">Contact</Link></li>
-              <li><Link to="/" className="hover:text-gray-900">Privacy Policy</Link></li>
-              <li><Link to="/" className="hover:text-gray-900">Terms of Service</Link></li>
+              <li><Link to="/" className="hover:text-gray-900">{t('about_us')}</Link></li>
+              <li><Link to="/" className="hover:text-gray-900">{t('contact')}</Link></li>
+              <li><Link to="/" className="hover:text-gray-900">{t('privacy_policy')}</Link></li>
+              <li><Link to="/" className="hover:text-gray-900">{t('terms_of_service')}</Link></li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} CREHER. All rights reserved.
+            © {new Date().getFullYear()} CREHER. {t('all_rights_reserved')}
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-gray-600">
