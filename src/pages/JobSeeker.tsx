@@ -3,8 +3,11 @@ import React from 'react';
 import Layout from '@/components/Layout';
 import JobSeekerForm from '@/components/JobSeekerForm';
 import { UserRound } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 const JobSeeker: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <Layout>
       <div className="py-12 bg-gray-50">
@@ -13,7 +16,7 @@ const JobSeeker: React.FC = () => {
             <div className="inline-flex items-center justify-center p-2 bg-jobseeker/10 rounded-full mb-4">
               <UserRound className="h-10 w-10 text-jobseeker" />
             </div>
-            <h1 className="text-3xl font-bold mb-4">Job Seeker Profile</h1>
+            <h1 className="text-3xl font-bold mb-4">Creher Profile</h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Create your professional profile and upload your resume to connect with top recruiters in your field.
             </p>

@@ -13,25 +13,25 @@ const translations = {
   en: {
     // Navbar
     'home': 'Home',
-    'for_job_seekers': 'For Job Seekers',
+    'for_job_seekers': 'For Creher',
     'for_recruiters': 'For Recruiters',
     'find_a_job': 'Find a Job',
     'hire_talent': 'Hire Talent',
     
     // Hero
     'connecting': 'Connecting',
-    'job_seekers': 'Job Seekers',
+    'job_seekers': 'Creher',
     'with': 'with',
     'recruiters': 'Recruiters',
     'slogan': 'Value Every Relationship',
     'hero_description': 'Whether you\'re looking for your next career opportunity or seeking the best talent for your company, CREHER bridges the gap with our specialized platform.',
-    'im_a_job_seeker': 'I\'m a Job Seeker',
+    'im_a_job_seeker': 'I\'m Creher',
     'im_a_recruiter': 'I\'m a Recruiter',
     
     // Features
     'how_creher_works': 'How CREHER Works',
-    'features_description': 'A comprehensive platform designed to benefit both job seekers and recruiters with powerful features.',
-    'for_job_seekers_title': 'For Job Seekers',
+    'features_description': 'A comprehensive platform designed to benefit both Creher and recruiters with powerful features.',
+    'for_job_seekers_title': 'For Creher',
     'for_job_seekers_desc': 'Tools and features to help you showcase your skills, find the right opportunities, and connect with top recruiters.',
     'for_recruiters_title': 'For Recruiters',
     'for_recruiters_desc': 'Specialized consulting services and tools to optimize your recruitment process, ensure workplace security, and maintain legal compliance.',
@@ -59,7 +59,7 @@ const translations = {
     // CTA
     'ready_to_take_next_step': 'Ready to Take the Next Step?',
     'cta_description': 'Whether you\'re seeking new opportunities or looking for the right talent, CREHER is here to help you succeed.',
-    'create_job_seeker_profile': 'Create Job Seeker Profile',
+    'create_job_seeker_profile': 'Create Creher Profile',
     'request_recruitment_consulting': 'Request Recruitment Consulting',
     
     // Footer
@@ -73,25 +73,25 @@ const translations = {
   fr: {
     // Navbar
     'home': 'Accueil',
-    'for_job_seekers': 'Pour les Candidats',
+    'for_job_seekers': 'Pour Creher',
     'for_recruiters': 'Pour les Recruteurs',
     'find_a_job': 'Trouver un emploi',
     'hire_talent': 'Recruter',
     
     // Hero
     'connecting': 'Connecter les',
-    'job_seekers': 'Candidats',
+    'job_seekers': 'Creher',
     'with': 'avec les',
     'recruiters': 'Recruteurs',
     'slogan': 'Valoriser Chaque Relation',
     'hero_description': 'Que vous recherchiez votre prochaine opportunité de carrière ou le meilleur talent pour votre entreprise, CREHER comble le fossé avec notre plateforme spécialisée.',
-    'im_a_job_seeker': 'Je suis Candidat',
+    'im_a_job_seeker': 'Je suis Creher',
     'im_a_recruiter': 'Je suis Recruteur',
     
     // Features
     'how_creher_works': 'Comment fonctionne CREHER',
-    'features_description': 'Une plateforme complète conçue pour bénéficier aux candidats et aux recruteurs avec des fonctionnalités puissantes.',
-    'for_job_seekers_title': 'Pour les Candidats',
+    'features_description': 'Une plateforme complète conçue pour bénéficier aux Creher et aux recruteurs avec des fonctionnalités puissantes.',
+    'for_job_seekers_title': 'Pour Creher',
     'for_job_seekers_desc': 'Des outils et des fonctionnalités pour vous aider à mettre en valeur vos compétences, trouver les bonnes opportunités et vous connecter avec les meilleurs recruteurs.',
     'for_recruiters_title': 'Pour les Recruteurs',
     'for_recruiters_desc': 'Services de conseil spécialisés et outils pour optimiser votre processus de recrutement, assurer la sécurité au travail et maintenir la conformité légale.',
@@ -119,7 +119,7 @@ const translations = {
     // CTA
     'ready_to_take_next_step': 'Prêt à passer à l\'étape suivante?',
     'cta_description': 'Que vous recherchiez de nouvelles opportunités ou le bon talent, CREHER est là pour vous aider à réussir.',
-    'create_job_seeker_profile': 'Créer un Profil de Candidat',
+    'create_job_seeker_profile': 'Créer un Profil Creher',
     'request_recruitment_consulting': 'Demander des Services de Recrutement',
     
     // Footer

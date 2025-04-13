@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { FileText, Upload } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from '@/context/LanguageContext';
 
 const jobCategories = [
   "Technology & IT",
@@ -35,6 +35,7 @@ const experienceLevels = [
 
 const JobSeekerForm: React.FC = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +64,7 @@ const JobSeekerForm: React.FC = () => {
       setLoading(false);
       toast({
         title: "Profile Submitted!",
-        description: "Your job seeker profile has been created successfully.",
+        description: "Your Creher profile has been created successfully.",
       });
       
       // Reset form
@@ -84,7 +85,7 @@ const JobSeekerForm: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl text-jobseeker">Create Your Job Seeker Profile</CardTitle>
+        <CardTitle className="text-2xl text-jobseeker">Create Your Creher Profile</CardTitle>
         <CardDescription>
           Fill out the form below to create your profile and start connecting with recruiters.
         </CardDescription>
