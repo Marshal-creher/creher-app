@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
             <Link to="/" className="flex flex-col items-start">
               <div className="text-xl font-bold flex items-center gap-2">
                 <img 
-                  src="/lovable-uploads/7f2de132-399f-4a36-96bf-cf61a111eb46.png" 
+                  src="/lovable-uploads/0a8dd22a-7c81-4cb4-9401-5bb711ab32bd.png" 
                   alt="CREHER Logo" 
                   className="h-10 w-auto"
                 />
