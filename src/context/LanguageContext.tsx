@@ -133,6 +133,49 @@ const translations = {
     'profile_submitted': 'Profile Submitted!',
     'profile_success': 'Your Creher profile has been created successfully.',
     'required_field': 'This field is required',
+    
+    // Job Categories
+    'Technology & IT': 'Technology & IT',
+    'Marketing & Communications': 'Marketing & Communications',
+    'Finance & Accounting': 'Finance & Accounting',
+    'Human Resources': 'Human Resources',
+    'Sales & Business Development': 'Sales & Business Development',
+    'Administrative & Office Support': 'Administrative & Office Support',
+    'Design & Creative': 'Design & Creative',
+    'Healthcare & Medicine': 'Healthcare & Medicine',
+    'Education & Training': 'Education & Training',
+    'Engineering & Architecture': 'Engineering & Architecture',
+    'Legal': 'Legal',
+    'Customer Service': 'Customer Service',
+    'Other': 'Other',
+
+    // Experience Levels
+    'Entry Level (0-2 years)': 'Entry Level (0-2 years)',
+    'Mid Level (3-5 years)': 'Mid Level (3-5 years)',
+    'Senior Level (6-10 years)': 'Senior Level (6-10 years)',
+    'Executive Level (10+ years)': 'Executive Level (10+ years)',
+
+    // Company Sizes
+    '1-10 employees': '1-10 employees',
+    '11-50 employees': '11-50 employees',
+    '51-200 employees': '51-200 employees',
+    '201-500 employees': '201-500 employees',
+    '501-1000 employees': '501-1000 employees',
+    '1000+ employees': '1000+ employees',
+
+    // Industry Types
+    'Technology & Software': 'Technology & Software',
+    'Healthcare & Pharmaceuticals': 'Healthcare & Pharmaceuticals',
+    'Financial Services & Banking': 'Financial Services & Banking',
+    'Retail & E-commerce': 'Retail & E-commerce',
+    'Manufacturing & Production': 'Manufacturing & Production',
+    'Education & Training': 'Education & Training',
+    'Media & Entertainment': 'Media & Entertainment',
+    'Government & Public Sector': 'Government & Public Sector',
+    'Telecommunications': 'Telecommunications',
+    'Food & Hospitality': 'Food & Hospitality',
+    'Construction & Real Estate': 'Construction & Real Estate',
+    'Other': 'Other',
   },
   fr: {
     // Navbar
@@ -258,6 +301,49 @@ const translations = {
     'profile_submitted': 'Profil Soumis !',
     'profile_success': 'Votre profil Creher a été créé avec succès.',
     'required_field': 'Ce champ est obligatoire',
+    
+    // Job Categories
+    'Technology & IT': 'Technologie & Informatique',
+    'Marketing & Communications': 'Marketing & Communication',
+    'Finance & Accounting': 'Finance & Comptabilité',
+    'Human Resources': 'Ressources Humaines',
+    'Sales & Business Development': 'Ventes & Développement Commercial',
+    'Administrative & Office Support': 'Support Administratif & Bureau',
+    'Design & Creative': 'Design & Création',
+    'Healthcare & Medicine': 'Santé & Médecine',
+    'Education & Training': 'Éducation & Formation',
+    'Engineering & Architecture': 'Ingénierie & Architecture',
+    'Legal': 'Juridique',
+    'Customer Service': 'Service Client',
+    'Other': 'Autre',
+
+    // Experience Levels
+    'Entry Level (0-2 years)': 'Débutant (0-2 ans)',
+    'Mid Level (3-5 years)': 'Intermédiaire (3-5 ans)',
+    'Senior Level (6-10 years)': 'Senior (6-10 ans)',
+    'Executive Level (10+ years)': 'Cadre Supérieur (10+ ans)',
+
+    // Company Sizes
+    '1-10 employees': '1-10 employés',
+    '11-50 employees': '11-50 employés',
+    '51-200 employees': '51-200 employés',
+    '201-500 employees': '201-500 employés',
+    '501-1000 employees': '501-1000 employés',
+    '1000+ employees': '1000+ employés',
+
+    // Industry Types
+    'Technology & Software': 'Technologie & Logiciels',
+    'Healthcare & Pharmaceuticals': 'Santé & Pharmaceutique',
+    'Financial Services & Banking': 'Services Financiers & Bancaires',
+    'Retail & E-commerce': 'Commerce & E-commerce',
+    'Manufacturing & Production': 'Fabrication & Production',
+    'Education & Training': 'Éducation & Formation',
+    'Media & Entertainment': 'Médias & Divertissement',
+    'Government & Public Sector': 'Gouvernement & Secteur Public',
+    'Telecommunications': 'Télécommunications',
+    'Food & Hospitality': 'Alimentation & Hôtellerie',
+    'Construction & Real Estate': 'Construction & Immobilier',
+    'Other': 'Autre',
   }
 };
 

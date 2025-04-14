@@ -57,7 +57,9 @@ const ProfessionalInfoSection: React.FC<ProfessionalInfoProps> = ({
           </SelectTrigger>
           <SelectContent>
             {jobCategories.map((category) => (
-              <SelectItem key={category} value={category}>{category}</SelectItem>
+              <SelectItem key={category} value={category}>
+                {t(category)}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -70,7 +72,9 @@ const ProfessionalInfoSection: React.FC<ProfessionalInfoProps> = ({
           </SelectTrigger>
           <SelectContent>
             {experienceLevels.map((level) => (
-              <SelectItem key={level} value={level}>{level}</SelectItem>
+              <SelectItem key={level} value={level}>
+                {t(level)}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>

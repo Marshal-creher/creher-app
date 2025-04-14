@@ -198,7 +198,7 @@ const RecruiterForm: React.FC = () => {
                 </SelectTrigger>
                 <SelectContent>
                   {companySize.map((size) => (
-                    <SelectItem key={size} value={size}>{size}</SelectItem>
+                    <SelectItem key={size} value={size}>{t(size)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
