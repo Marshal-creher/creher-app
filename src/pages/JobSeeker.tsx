@@ -1,7 +1,7 @@
-
 import React from 'react';
 import Layout from '@/components/Layout';
 import JobSeekerForm from '@/components/JobSeekerForm';
+import ApplicationForm from '@/components/ApplicationForm';
 import { UserRound } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -21,10 +21,20 @@ const JobSeeker: React.FC = () => {
               Create your professional profile and upload your resume to connect with top recruiters in your field.
             </p>
           </div>
-          
-          <div className="max-w-3xl mx-auto">
-            <JobSeekerForm />
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4 pb-12">
+        <div className="max-w-3xl mx-auto">
+          <JobSeekerForm />
+        </div>
+
+        <div className="max-w-3xl mx-auto mt-12 pt-12 border-t">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold">{t('apply_now')}</h2>
+            <p className="text-gray-600 mt-2">{t('send_application')}</p>
           </div>
+          <ApplicationForm />
         </div>
       </div>
     </Layout>
