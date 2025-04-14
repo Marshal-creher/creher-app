@@ -1,7 +1,7 @@
-
 import React from 'react';
 import Layout from '@/components/Layout';
 import JobSeekerForm from '@/components/JobSeekerForm';
+import ApplicationForm from '@/components/ApplicationForm';
 import { UserRound } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -27,6 +27,7 @@ const JobSeeker: React.FC = () => {
           </div>
         </div>
       </div>
+      <ApplicationForm />
     </Layout>
   );
 };
