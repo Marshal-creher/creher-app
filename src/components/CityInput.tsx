@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
-import { cities, Region } from '@/data/cities';
+import { cities } from '@/data/cities';
 import { MapPin } from 'lucide-react';
 
 interface CityInputProps {
@@ -16,7 +16,7 @@ const CityInput: React.FC<CityInputProps> = ({ value, onChange, placeholder, req
   const [showSuggestions, setShowSuggestions] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const allCities = Object.values(cities).flat();
+  const allCities = cities.Morocco;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
