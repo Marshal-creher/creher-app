@@ -33,7 +33,7 @@ const CityInput: React.FC<CityInputProps> = ({ value, onChange, placeholder, req
     const inputValue = e.target.value;
     onChange(inputValue);
 
-    if (inputValue.length > 1) {
+    if (inputValue.length > 0) {
       const filtered = allCities.filter(city =>
         city.toLowerCase().includes(inputValue.toLowerCase())
       );
