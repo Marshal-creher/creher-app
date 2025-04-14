@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { FileText, Upload } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from '@/context/LanguageContext';
+import CityInput from './CityInput';
 
 const jobCategories = [
   "Technology & IT",
@@ -59,15 +60,23 @@ const JobSeekerForm: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate form submission
+    if (!firstName || !lastName || !email || !jobCategory || !experienceLevel || !location || !coverLetter) {
+      toast({
+        title: t('error'),
+        description: t('required_field'),
+        variant: "destructive",
+      });
+      setLoading(false);
+      return;
+    }
+
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: "Profile Submitted!",
-        description: "Your Creher profile has been created successfully.",
+        title: t('profile_created'),
+        description: t('profile_created_description'),
       });
       
-      // Reset form
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -85,29 +94,29 @@ const JobSeekerForm: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl text-jobseeker">Create Your Creher Profile</CardTitle>
+        <CardTitle className="text-2xl text-jobseeker">{t('create_profile')}</CardTitle>
         <CardDescription>
-          Fill out the form below to create your profile and start connecting with recruiters.
+          {t('profile_description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">{t('first_name')}</Label>
               <Input 
                 id="firstName" 
-                placeholder="Enter your first name" 
+                placeholder={t('first_name')} 
                 value={firstName} 
                 onChange={(e) => setFirstName(e.target.value)} 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">{t('last_name')}</Label>
               <Input 
                 id="lastName" 
-                placeholder="Enter your last name" 
+                placeholder={t('last_name')} 
                 value={lastName} 
                 onChange={(e) => setLastName(e.target.value)} 
                 required 
@@ -117,21 +126,21 @@ const JobSeekerForm: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">{t('email')}</Label>
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="Enter your email address" 
+                placeholder={t('email')} 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">{t('phone')}</Label>
               <Input 
                 id="phone" 
-                placeholder="Enter your phone number" 
+                placeholder={t('phone')} 
                 value={phone} 
                 onChange={(e) => setPhone(e.target.value)} 
               />
@@ -140,10 +149,10 @@ const JobSeekerForm: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="jobCategory">Job Category</Label>
+              <Label htmlFor="jobCategory">{t('job_category')}</Label>
               <Select value={jobCategory} onValueChange={setJobCategory} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a job category" />
+                  <SelectValue placeholder={t('select_job_category')} />
                 </SelectTrigger>
                 <SelectContent>
                   {jobCategories.map((category) => (
@@ -153,10 +162,10 @@ const JobSeekerForm: React.FC = () => {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="experienceLevel">Experience Level</Label>
+              <Label htmlFor="experienceLevel">{t('experience_level')}</Label>
               <Select value={experienceLevel} onValueChange={setExperienceLevel} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select your experience level" />
+                  <SelectValue placeholder={t('select_experience_level')} />
                 </SelectTrigger>
                 <SelectContent>
                   {experienceLevels.map((level) => (
@@ -168,23 +177,22 @@ const JobSeekerForm: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="location">Preferred Location</Label>
-            <Input 
-              id="location" 
-              placeholder="City, State, Country" 
-              value={location} 
-              onChange={(e) => setLocation(e.target.value)} 
-              required 
+            <Label htmlFor="location">{t('preferred_location')}</Label>
+            <CityInput
+              value={location}
+              onChange={setLocation}
+              placeholder={t('enter_location')}
+              required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="resume">Upload Resume</Label>
+            <Label htmlFor="resume">{t('upload_resume')}</Label>
             <div className="border border-input rounded-md p-2">
               <div className="flex items-center">
                 <label htmlFor="resumeUpload" className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-800 flex items-center gap-2 py-2 px-4 rounded-md">
                   <Upload size={18} />
-                  Select File
+                  {t('file_upload_text')}
                 </label>
                 <input
                   id="resumeUpload"
@@ -194,17 +202,17 @@ const JobSeekerForm: React.FC = () => {
                   className="hidden"
                 />
                 <span className="ml-4 text-gray-600 text-sm">
-                  {resumeFile ? resumeFile.name : "No file selected (PDF, DOC, DOCX)"}
+                  {resumeFile ? resumeFile.name : t('no_file_selected')}
                 </span>
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="coverLetter">Cover Letter / Professional Summary</Label>
+            <Label htmlFor="coverLetter">{t('cover_letter')}</Label>
             <Textarea 
               id="coverLetter" 
-              placeholder="Briefly describe your professional background, skills, and career goals..." 
+              placeholder={t('cover_letter_placeholder')} 
               value={coverLetter} 
               onChange={(e) => setCoverLetter(e.target.value)} 
               className="min-h-[120px]" 
@@ -219,7 +227,7 @@ const JobSeekerForm: React.FC = () => {
                 checked={openToRemote} 
                 onCheckedChange={setOpenToRemote} 
               />
-              <Label htmlFor="openToRemote">Open to Remote Work</Label>
+              <Label htmlFor="openToRemote">{t('open_to_remote')}</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Switch 
@@ -227,7 +235,7 @@ const JobSeekerForm: React.FC = () => {
                 checked={openToRelocation} 
                 onCheckedChange={setOpenToRelocation} 
               />
-              <Label htmlFor="openToRelocation">Open to Relocation</Label>
+              <Label htmlFor="openToRelocation">{t('open_to_relocation')}</Label>
             </div>
           </div>
 
@@ -242,12 +250,12 @@ const JobSeekerForm: React.FC = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Processing...
+                {t('processing')}
               </span>
             ) : (
               <span className="flex items-center gap-2">
                 <FileText size={18} />
-                Create Profile
+                {t('create_profile_button')}
               </span>
             )}
           </Button>
