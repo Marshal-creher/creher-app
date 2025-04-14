@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { BriefcaseBusiness, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from '@/context/LanguageContext';
 
 const companySize = [
   "1-10 employees",
@@ -35,21 +35,22 @@ const industryTypes = [
 ];
 
 const consultingServices = [
-  { id: "talent-acquisition", label: "Talent Acquisition Strategy" },
-  { id: "sourcing", label: "Candidate Sourcing" },
-  { id: "screening", label: "Candidate Screening & Selection" },
-  { id: "assessment", label: "Skills Assessment" },
-  { id: "employer-branding", label: "Employer Branding" },
-  { id: "work-security", label: "Work Security Audit & Formation" },
-  { id: "law-regulations", label: "Law Regulations Consulting" },
-  { id: "onboarding", label: "Onboarding Optimization" },
-  { id: "retention", label: "Employee Retention Strategies" },
-  { id: "workforce-planning", label: "Workforce Planning" },
-  { id: "other", label: "Other Services" }
+  { id: "admin-outsourcing", label: "Outsourcing of administrative management" },
+  { id: "mediation", label: "Mediation and conflict management" },
+  { id: "labor-law", label: "Training on Moroccan labor law" },
+  { id: "compliance", label: "Compliance with regulations" },
+  { id: "hr-digital", label: "HR process digitalization" },
+  { id: "security-audit", label: "HR security audit" },
+  { id: "accident-delegation", label: "Workplace accident delegation" },
+  { id: "safety-training", label: "Workplace safety training" },
+  { id: "social-compliance", label: "Social compliance training" },
+  { id: "recruitment", label: "Recruitment solutions" },
+  { id: "other", label: "Other services" }
 ];
 
 const RecruiterForm: React.FC = () => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -71,17 +72,25 @@ const RecruiterForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (selectedServices.length === 0) {
+      toast({
+        title: t('error'),
+        description: t('select_at_least_one_service'),
+        variant: "destructive"
+      });
+      return;
+    }
+
     setLoading(true);
     
-    // Simulate form submission
     setTimeout(() => {
       setLoading(false);
       toast({
-        title: "Consultation Request Submitted!",
-        description: "We'll contact you shortly to discuss your recruitment needs.",
+        title: t('request_submitted'),
+        description: t('contact_shortly'),
       });
       
-      // Reset form
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -97,29 +106,35 @@ const RecruiterForm: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl text-recruiter">Request Recruitment Consulting</CardTitle>
+        <CardTitle className="text-2xl text-recruiter">{t('request_recruitment_consulting')}</CardTitle>
         <CardDescription>
-          Tell us about your company and recruitment needs to get specialized consulting services.
+          {t('consulting_form_description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName" className="flex items-center gap-1">
+                {t('first_name')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input 
                 id="firstName" 
-                placeholder="Enter your first name" 
+                placeholder={t('enter_first_name')} 
                 value={firstName} 
                 onChange={(e) => setFirstName(e.target.value)} 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName" className="flex items-center gap-1">
+                {t('last_name')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input 
                 id="lastName" 
-                placeholder="Enter your last name" 
+                placeholder={t('enter_last_name')} 
                 value={lastName} 
                 onChange={(e) => setLastName(e.target.value)} 
                 required 
@@ -129,21 +144,27 @@ const RecruiterForm: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email" className="flex items-center gap-1">
+                {t('email')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input 
                 id="email" 
                 type="email" 
-                placeholder="Enter your email address" 
+                placeholder={t('enter_email')} 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone" className="flex items-center gap-1">
+                {t('phone')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Input 
                 id="phone" 
-                placeholder="Enter your phone number" 
+                placeholder={t('enter_phone')} 
                 value={phone} 
                 onChange={(e) => setPhone(e.target.value)} 
                 required 
@@ -152,10 +173,13 @@ const RecruiterForm: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="companyName">Company Name</Label>
+            <Label htmlFor="companyName" className="flex items-center gap-1">
+              {t('company_name')}
+              <span className="text-destructive">*</span>
+            </Label>
             <Input 
               id="companyName" 
-              placeholder="Enter your company name" 
+              placeholder={t('enter_company_name')} 
               value={companyName} 
               onChange={(e) => setCompanyName(e.target.value)} 
               required 
@@ -164,10 +188,13 @@ const RecruiterForm: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="companySize">Company Size</Label>
+              <Label htmlFor="companySize" className="flex items-center gap-1">
+                {t('company_size')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Select value={size} onValueChange={setSize} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select company size" />
+                  <SelectValue placeholder={t('select_company_size')} />
                 </SelectTrigger>
                 <SelectContent>
                   {companySize.map((size) => (
@@ -177,14 +204,17 @@ const RecruiterForm: React.FC = () => {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="industry">Industry</Label>
+              <Label htmlFor="industry" className="flex items-center gap-1">
+                {t('industry')}
+                <span className="text-destructive">*</span>
+              </Label>
               <Select value={industry} onValueChange={setIndustry} required>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select your industry" />
+                  <SelectValue placeholder={t('select_industry')} />
                 </SelectTrigger>
                 <SelectContent>
                   {industryTypes.map((industry) => (
-                    <SelectItem key={industry} value={industry}>{industry}</SelectItem>
+                    <SelectItem key={industry} value={industry}>{t(industry)}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -192,7 +222,10 @@ const RecruiterForm: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Consulting Services Needed</Label>
+            <Label className="flex items-center gap-1">
+              {t('consulting_services_needed')}
+              <span className="text-destructive">*</span>
+            </Label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
               {consultingServices.map((service) => (
                 <div key={service.id} className="flex items-center space-x-2">
@@ -205,7 +238,7 @@ const RecruiterForm: React.FC = () => {
                     htmlFor={service.id} 
                     className="text-sm font-normal cursor-pointer"
                   >
-                    {service.label}
+                    {t(service.label)}
                   </Label>
                 </div>
               ))}
@@ -213,10 +246,13 @@ const RecruiterForm: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="consultingNeeds">Describe Your Recruitment Needs</Label>
+            <Label htmlFor="consultingNeeds" className="flex items-center gap-1">
+              {t('describe_needs')}
+              <span className="text-destructive">*</span>
+            </Label>
             <Textarea 
               id="consultingNeeds" 
-              placeholder="Please describe your specific recruitment challenges and what you're looking to achieve..." 
+              placeholder={t('describe_needs_placeholder')} 
               value={consultingNeeds} 
               onChange={(e) => setConsultingNeeds(e.target.value)} 
               className="min-h-[120px]" 
@@ -235,12 +271,12 @@ const RecruiterForm: React.FC = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Processing...
+                {t('processing')}
               </span>
             ) : (
               <span className="flex items-center gap-2">
                 <MessageSquare size={18} />
-                Submit Request
+                {t('submit_request')}
               </span>
             )}
           </Button>
