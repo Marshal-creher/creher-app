@@ -16,9 +16,9 @@ const JobSeeker: React.FC = () => {
             <div className="inline-flex items-center justify-center p-2 bg-jobseeker/10 rounded-full mb-4">
               <UserRound className="h-10 w-10 text-jobseeker" />
             </div>
-            <h1 className="text-3xl font-bold mb-4">Inscription et Candidature</h1>
+            <h1 className="text-3xl font-bold mb-4">{t('registration_and_application')}</h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Créez votre compte et envoyez votre candidature en une seule étape simple.
+              {t('create_account_and_apply')}
             </p>
           </div>
           

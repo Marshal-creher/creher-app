@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type Language = 'en' | 'fr';
@@ -173,6 +172,14 @@ const translations = {
     'industry_food': 'Food & Hospitality',
     'industry_construction': 'Construction & Real Estate',
     'industry_other': 'Other',
+
+    // JobSeeker page
+    'registration_and_application': 'Registration and Application',
+    'create_account_and_apply': 'Create your account and submit your application in one simple step.',
+    'sending': 'Sending...',
+    'send': 'Send',
+    'thanks_for_submission': 'Thank you for your submission',
+    'error_occurred': 'An error occurred. Please try again.',
   },
   fr: {
     // Navbar
@@ -337,6 +344,14 @@ const translations = {
     'industry_food': 'Alimentation & Hôtellerie',
     'industry_construction': 'Construction & Immobilier',
     'industry_other': 'Autre',
+
+    // JobSeeker page
+    'registration_and_application': 'Inscription et Candidature',
+    'create_account_and_apply': 'Créez votre compte et envoyez votre candidature en une seule étape simple.',
+    'sending': 'Envoi en cours...',
+    'send': 'Envoyer',
+    'thanks_for_submission': 'Merci pour votre envoi',
+    'error_occurred': 'Une erreur s\'est produite. Veuillez réessayer.',
   }
 };
 
