@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -13,15 +12,56 @@ const CombinedJobSeekerForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
 
+  React.useEffect(() => {
+    const form = document.createElement('form');
+    form.setAttribute('name', 'contact');
+    form.setAttribute('data-netlify', 'true');
+    form.setAttribute('hidden', 'true');
+    
+    const nameInput = document.createElement('input');
+    nameInput.setAttribute('name', 'prenom');
+    form.appendChild(nameInput);
+    
+    const lastNameInput = document.createElement('input');
+    lastNameInput.setAttribute('name', 'nom');
+    form.appendChild(lastNameInput);
+    
+    const emailInput = document.createElement('input');
+    emailInput.setAttribute('name', 'email');
+    form.appendChild(emailInput);
+    
+    const phoneInput = document.createElement('input');
+    phoneInput.setAttribute('name', 'telephone');
+    form.appendChild(phoneInput);
+    
+    const cvInput = document.createElement('input');
+    cvInput.setAttribute('name', 'cv');
+    form.appendChild(cvInput);
+    
+    const letterInput = document.createElement('input');
+    letterInput.setAttribute('name', 'lettre');
+    form.appendChild(letterInput);
+    
+    document.body.appendChild(form);
+    
+    return () => {
+      document.body.removeChild(form);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const formData = new FormData(e.currentTarget);
+      
+      formData.append('form-name', 'contact');
+      
       await fetch('/', {
         method: 'POST',
-        body: formData
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString()
       });
       
       toast({
@@ -29,7 +69,6 @@ const CombinedJobSeekerForm: React.FC = () => {
         description: t('profile_success'),
       });
       
-      // Reset form
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       toast({
@@ -37,6 +76,7 @@ const CombinedJobSeekerForm: React.FC = () => {
         description: t('submission_error'),
         variant: "destructive",
       });
+      console.error('Form submission error:', error);
     } finally {
       setLoading(false);
     }
@@ -55,6 +95,7 @@ const CombinedJobSeekerForm: React.FC = () => {
           name="contact" 
           method="POST" 
           data-netlify="true" 
+          netlify="true"
           encType="multipart/form-data"
           onSubmit={handleSubmit} 
           className="space-y-6"
