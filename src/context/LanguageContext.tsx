@@ -176,21 +176,6 @@ const translations = {
     'Food & Hospitality': 'Food & Hospitality',
     'Construction & Real Estate': 'Construction & Real Estate',
     'Other': 'Other',
-
-    // Apply Now
-    'apply_now': "Apply Now",
-    'send_application': "Send us your application and we'll get back to you soon",
-    'first_name': "First Name",
-    'last_name': "Last Name",
-    'phone': "Phone",
-    'resume': "Resume",
-    'enter_first_name': "Enter your first name",
-    'enter_last_name': "Enter your last name",
-    'enter_phone': "Enter your phone number",
-    'send': "Send",
-    'sending': "Sending...",
-    'thank_you': "Thank you!",
-    'application_received': "We have received your application and will contact you soon.",
   },
   fr: {
     // Navbar
@@ -359,21 +344,6 @@ const translations = {
     'Food & Hospitality': 'Alimentation & Hôtellerie',
     'Construction & Real Estate': 'Construction & Immobilier',
     'Other': 'Autre',
-
-    // Apply Now
-    'apply_now': "Postulez maintenant",
-    'send_application': "Envoyez-nous votre candidature et nous vous recontacterons bientôt",
-    'first_name': "Prénom",
-    'last_name': "Nom",
-    'phone': "Téléphone",
-    'resume': "CV",
-    'enter_first_name': "Entrez votre prénom",
-    'enter_last_name': "Entrez votre nom",
-    'enter_phone': "Entrez votre numéro de téléphone",
-    'send': "Envoyer",
-    'sending': "Envoi en cours...",
-    'thank_you': "Merci !",
-    'application_received': "Nous avons bien reçu votre candidature et vous recontacterons bientôt.",
   }
 };
 
