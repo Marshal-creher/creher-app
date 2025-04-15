@@ -25,16 +25,16 @@ const CombinedJobSeekerForm: React.FC = () => {
       });
       
       toast({
-        title: "Succès",
-        description: "Votre candidature a été envoyée avec succès",
+        title: t('profile_submitted'),
+        description: t('profile_success'),
       });
       
       // Reset form
       (e.target as HTMLFormElement).reset();
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
+        title: t('error'),
+        description: t('submission_error'),
         variant: "destructive",
       });
     } finally {
@@ -45,9 +45,9 @@ const CombinedJobSeekerForm: React.FC = () => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-2xl text-jobseeker">Inscription et Candidature</CardTitle>
+        <CardTitle className="text-2xl text-jobseeker">{t('create_profile')}</CardTitle>
         <CardDescription>
-          Créez votre compte et envoyez votre candidature en une seule étape
+          {t('profile_description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -62,58 +62,58 @@ const CombinedJobSeekerForm: React.FC = () => {
           <input type="hidden" name="form-name" value="contact" />
           
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Informations Personnelles</h3>
+            <h3 className="text-lg font-semibold">{t('first_name')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor="prenom">Prénom</Label>
+                <Label htmlFor="prenom">{t('first_name')}</Label>
                 <Input 
                   id="prenom"
                   name="prenom"
                   type="text"
                   required
-                  placeholder="Votre prénom"
+                  placeholder={t('first_name')}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="nom">Nom</Label>
+                <Label htmlFor="nom">{t('last_name')}</Label>
                 <Input 
                   id="nom"
                   name="nom"
                   type="text"
                   required
-                  placeholder="Votre nom"
+                  placeholder={t('last_name')}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('email')}</Label>
                 <Input 
                   id="email"
                   name="email"
                   type="email"
                   required
-                  placeholder="votre@email.com"
+                  placeholder={t('email')}
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="telephone">Téléphone</Label>
+                <Label htmlFor="telephone">{t('phone')}</Label>
                 <Input 
                   id="telephone"
                   name="telephone"
                   type="tel"
                   required
-                  placeholder="Votre numéro de téléphone"
+                  placeholder={t('phone')}
                 />
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Documents</h3>
+            <h3 className="text-lg font-semibold">{t('upload_resume')}</h3>
             <div className="space-y-2">
-              <Label htmlFor="cv">CV (PDF, DOC, DOCX)</Label>
+              <Label htmlFor="cv">{t('upload_resume')} (PDF, DOC, DOCX)</Label>
               <Input 
                 id="cv"
                 name="cv"
@@ -125,7 +125,7 @@ const CombinedJobSeekerForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lettre">Lettre de motivation (optionnel)</Label>
+              <Label htmlFor="lettre">{t('cover_letter')} ({t('other')})</Label>
               <Input 
                 id="lettre"
                 name="lettre"
@@ -147,12 +147,12 @@ const CombinedJobSeekerForm: React.FC = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Envoi en cours...
+                {t('sending')}
               </span>
             ) : (
               <span className="flex items-center gap-2">
                 <FileText size={18} />
-                Envoyer ma candidature
+                {t('create_profile_button')}
               </span>
             )}
           </Button>
