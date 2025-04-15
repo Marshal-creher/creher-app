@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type Language = 'en' | 'fr';
@@ -69,7 +70,7 @@ const translations = {
     'terms_of_service': 'Terms of Service',
     'all_rights_reserved': 'All rights reserved.',
     
-    // Form Fields
+    // Form Fields & Messages
     'first_name': 'First Name',
     'last_name': 'Last Name',
     'email': 'Email Address',
@@ -95,26 +96,9 @@ const translations = {
     'describe_needs_placeholder': 'Please describe your specific needs and what you\'re looking to achieve...',
     'consulting_form_description': 'Tell us about your company and consulting needs to get specialized HR services.',
     
-    // Services
-    'Outsourcing of administrative management': 'Outsourcing of Administrative Management',
-    'Mediation and conflict management': 'Mediation and Conflict Management',
-    'Training on Moroccan labor law': 'Training on Moroccan Labor Law',
-    'Compliance with regulations': 'Compliance with Regulations',
-    'HR process digitalization': 'HR Process Digitalization',
-    'HR security audit': 'HR Security Audit',
-    'Workplace accident delegation': 'Workplace Accident Delegation',
-    'Workplace safety training': 'Workplace Safety Training',
-    'Social compliance training': 'Social Compliance Training',
-    'Recruitment solutions': 'Recruitment Solutions',
-    'Other services': 'Other Services',
-    
     // Job Seeker Form
     'create_profile': 'Create Your Creher Profile',
     'profile_description': 'Fill out the form below to create your profile and start connecting with recruiters.',
-    'first_name': 'First Name',
-    'last_name': 'Last Name',
-    'email': 'Email Address',
-    'phone': 'Phone Number',
     'job_category': 'Job Category',
     'experience_level': 'Experience Level',
     'preferred_location': 'Preferred Location',
@@ -129,10 +113,23 @@ const translations = {
     'file_upload_text': 'Select File',
     'no_file_selected': 'No file selected (PDF, DOC, DOCX)',
     'create_profile_button': 'Create Profile',
-    'processing': 'Processing...',
     'profile_submitted': 'Profile Submitted!',
     'profile_success': 'Your Creher profile has been created successfully.',
     'required_field': 'This field is required',
+    'submission_error': 'There was an error submitting your profile. Please try again.',
+    
+    // Services
+    'Outsourcing of administrative management': 'Outsourcing of Administrative Management',
+    'Mediation and conflict management': 'Mediation and Conflict Management',
+    'Training on Moroccan labor law': 'Training on Moroccan Labor Law',
+    'Compliance with regulations': 'Compliance with Regulations',
+    'HR process digitalization': 'HR Process Digitalization',
+    'HR security audit': 'HR Security Audit',
+    'Workplace accident delegation': 'Workplace Accident Delegation',
+    'Workplace safety training': 'Workplace Safety Training',
+    'Social compliance training': 'Social Compliance Training',
+    'Recruitment solutions': 'Recruitment Solutions',
+    'Other services': 'Other Services',
     
     // Job Categories
     'Technology & IT': 'Technology & IT',
@@ -237,7 +234,7 @@ const translations = {
     'terms_of_service': 'Conditions d\'Utilisation',
     'all_rights_reserved': 'Tous droits réservés.',
     
-    // Form Fields
+    // Form Fields & Messages
     'first_name': 'Prénom',
     'last_name': 'Nom',
     'email': 'Adresse Email',
@@ -263,26 +260,9 @@ const translations = {
     'describe_needs_placeholder': 'Veuillez décrire vos besoins spécifiques et vos objectifs...',
     'consulting_form_description': 'Parlez-nous de votre entreprise et de vos besoins en conseil pour obtenir des services RH spécialisés.',
     
-    // Services
-    'Outsourcing of administrative management': 'Externalisation de la Gestion Administrative',
-    'Mediation and conflict management': 'Médiation et Gestion des Conflits',
-    'Training on Moroccan labor law': 'Formation en Droit du Travail Marocain',
-    'Compliance with regulations': 'Conformité aux Réglementations',
-    'HR process digitalization': 'Digitalisation des Processus RH',
-    'HR security audit': 'Audit de Sécurité RH',
-    'Workplace accident delegation': 'Délégation des Accidents de Travail',
-    'Workplace safety training': 'Formation à la Sécurité au Travail',
-    'Social compliance training': 'Formation à la Conformité Sociale',
-    'Recruitment solutions': 'Solutions de Recrutement',
-    'Other services': 'Autres Services',
-    
     // Job Seeker Form
     'create_profile': 'Créer Votre Profil Creher',
     'profile_description': 'Remplissez le formulaire ci-dessous pour créer votre profil et commencer à échanger avec les recruteurs.',
-    'first_name': 'Prénom',
-    'last_name': 'Nom',
-    'email': 'Adresse Email',
-    'phone': 'Numéro de Téléphone',
     'job_category': 'Catégorie d\'Emploi',
     'experience_level': 'Niveau d\'Expérience',
     'preferred_location': 'Localisation Souhaitée',
@@ -297,10 +277,23 @@ const translations = {
     'file_upload_text': 'Sélectionner un Fichier',
     'no_file_selected': 'Aucun fichier sélectionné (PDF, DOC, DOCX)',
     'create_profile_button': 'Créer le Profil',
-    'processing': 'Traitement en cours...',
     'profile_submitted': 'Profil Soumis !',
     'profile_success': 'Votre profil Creher a été créé avec succès.',
     'required_field': 'Ce champ est obligatoire',
+    'submission_error': 'Une erreur s\'est produite lors de l\'envoi de votre profil. Veuillez réessayer.',
+    
+    // Services
+    'Outsourcing of administrative management': 'Externalisation de la Gestion Administrative',
+    'Mediation and conflict management': 'Médiation et Gestion des Conflits',
+    'Training on Moroccan labor law': 'Formation en Droit du Travail Marocain',
+    'Compliance with regulations': 'Conformité aux Réglementations',
+    'HR process digitalization': 'Digitalisation des Processus RH',
+    'HR security audit': 'Audit de Sécurité RH',
+    'Workplace accident delegation': 'Délégation des Accidents de Travail',
+    'Workplace safety training': 'Formation à la Sécurité au Travail',
+    'Social compliance training': 'Formation à la Conformité Sociale',
+    'Recruitment solutions': 'Solutions de Recrutement',
+    'Other services': 'Autres Services',
     
     // Job Categories
     'Technology & IT': 'Technologie & Informatique',
