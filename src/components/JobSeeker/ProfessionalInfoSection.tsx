@@ -15,26 +15,26 @@ interface ProfessionalInfoProps {
 }
 
 const jobCategories = [
-  "Technology & IT",
-  "Marketing & Communications",
-  "Finance & Accounting",
-  "Human Resources",
-  "Sales & Business Development",
-  "Administrative & Office Support",
-  "Design & Creative",
-  "Healthcare & Medicine",
-  "Education & Training",
-  "Engineering & Architecture",
-  "Legal",
-  "Customer Service",
-  "Other"
+  "tech_it",
+  "marketing_communications",
+  "finance_accounting",
+  "human_resources",
+  "sales_business",
+  "admin_support",
+  "design_creative",
+  "healthcare_medicine",
+  "education_training",
+  "engineering_architecture",
+  "legal",
+  "customer_service",
+  "other"
 ];
 
 const experienceLevels = [
-  "Entry Level (0-2 years)",
-  "Mid Level (3-5 years)",
-  "Senior Level (6-10 years)",
-  "Executive Level (10+ years)"
+  "entry_level",
+  "mid_level",
+  "senior_level",
+  "executive_level"
 ];
 
 const ProfessionalInfoSection: React.FC<ProfessionalInfoProps> = ({
