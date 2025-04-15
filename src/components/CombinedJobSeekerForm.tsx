@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -13,11 +14,13 @@ const CombinedJobSeekerForm: React.FC = () => {
   const { t } = useLanguage();
 
   React.useEffect(() => {
+    // Create a hidden form for Netlify to detect
     const form = document.createElement('form');
     form.setAttribute('name', 'contact');
     form.setAttribute('data-netlify', 'true');
     form.setAttribute('hidden', 'true');
     
+    // Add all form fields
     const nameInput = document.createElement('input');
     nameInput.setAttribute('name', 'prenom');
     form.appendChild(nameInput);
@@ -95,7 +98,6 @@ const CombinedJobSeekerForm: React.FC = () => {
           name="contact" 
           method="POST" 
           data-netlify="true" 
-          netlify="true"
           encType="multipart/form-data"
           onSubmit={handleSubmit} 
           className="space-y-6"
