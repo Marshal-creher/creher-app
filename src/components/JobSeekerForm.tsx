@@ -26,7 +26,15 @@ const JobSeekerForm: React.FC = () => {
   const [openToRelocation, setOpenToRelocation] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const encode = (data: any) => {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+      formData.append(key, data[key]);
+    });
+    return formData;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
@@ -40,8 +48,27 @@ const JobSeekerForm: React.FC = () => {
       return;
     }
 
-    setTimeout(() => {
-      setLoading(false);
+    const formData = {
+      'form-name': 'job-seeker',
+      firstName,
+      lastName,
+      email,
+      phone,
+      jobCategory,
+      experienceLevel,
+      location,
+      resumeFile,
+      coverLetter,
+      openToRemote,
+      openToRelocation
+    };
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        body: encode(formData)
+      });
+      
       toast({
         title: t('profile_submitted'),
         description: t('profile_success'),
@@ -59,7 +86,15 @@ const JobSeekerForm: React.FC = () => {
       setCoverLetter('');
       setOpenToRemote(true);
       setOpenToRelocation(false);
-    }, 1500);
+    } catch (error) {
+      toast({
+        title: t('error'),
+        description: t('submission_error'),
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,7 +106,16 @@ const JobSeekerForm: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form 
+          name="job-seeker" 
+          method="POST" 
+          data-netlify="true" 
+          encType="multipart/form-data"
+          onSubmit={handleSubmit} 
+          className="space-y-6"
+        >
+          <input type="hidden" name="form-name" value="job-seeker" />
+          
           <PersonalInfoSection
             firstName={firstName}
             setFirstName={setFirstName}
