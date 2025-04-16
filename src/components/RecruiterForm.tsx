@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -35,17 +36,17 @@ const industryTypes = [
 ];
 
 const consultingServices = [
-  { id: "admin-outsourcing", label: "Outsourcing of administrative management" },
-  { id: "mediation", label: "Mediation and conflict management" },
-  { id: "labor-law", label: "Training on Moroccan labor law" },
-  { id: "compliance", label: "Compliance with regulations" },
-  { id: "hr-digital", label: "HR process digitalization" },
-  { id: "security-audit", label: "HR security audit" },
-  { id: "accident-delegation", label: "Workplace accident delegation" },
-  { id: "safety-training", label: "Workplace safety training" },
-  { id: "social-compliance", label: "Social compliance training" },
-  { id: "recruitment", label: "Recruitment solutions" },
-  { id: "other", label: "Other services" }
+  { id: "admin-outsourcing", label: "outsourcing_admin" },
+  { id: "mediation", label: "mediation_conflict" },
+  { id: "labor-law", label: "labor_law_training" },
+  { id: "compliance", label: "compliance_regulations" },
+  { id: "hr-digital", label: "hr_digitalization" },
+  { id: "security-audit", label: "hr_security_audit" },
+  { id: "accident-delegation", label: "workplace_accident" },
+  { id: "safety-training", label: "workplace_safety" },
+  { id: "social-compliance", label: "social_compliance" },
+  { id: "recruitment", label: "recruitment_solutions_service" },
+  { id: "other", label: "other_services" }
 ];
 
 const RecruiterForm: React.FC = () => {
