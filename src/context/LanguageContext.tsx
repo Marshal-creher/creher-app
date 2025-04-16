@@ -96,7 +96,7 @@ const translations = {
     'enter_company_name': 'Enter your company name',
     'select_company_size': 'Select company size',
     'select_industry': 'Select your industry',
-    'describe_needs_placeholder': 'Please describe your specific needs and what you\'re looking to achieve...',
+    'describe_needs_placeholder': 'Please describe your specific needs and what you\'re looking to achieve / Let us know when we can contact you...',
     'consulting_form_description': 'Tell us about your company and consulting needs to get specialized HR services.',
     
     // Job Seeker Form
@@ -272,7 +272,7 @@ const translations = {
     'enter_company_name': 'Entrez le nom de votre entreprise',
     'select_company_size': 'Sélectionnez la taille de l\'entreprise',
     'select_industry': 'Sélectionnez votre secteur d\'activité',
-    'describe_needs_placeholder': 'Veuillez décrire vos besoins spécifiques et vos objectifs...',
+    'describe_needs_placeholder': 'Veuillez décrire vos besoins spécifiques et vos objectifs / indiquez un créneau pour vous contacter...',
     'consulting_form_description': 'Parlez-nous de votre entreprise et de vos besoins en conseil pour obtenir des services RH spécialisés.',
     
     // Job Seeker Form
