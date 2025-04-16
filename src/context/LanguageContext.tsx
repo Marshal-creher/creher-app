@@ -17,6 +17,10 @@ const translations = {
     'find_a_job': 'Find a Job',
     'hire_talent': 'Hire Talent',
     
+    // Recruiter Page
+    'recruitment_consulting_title': 'Recruitment Consulting',
+    'recruitment_consulting_description': 'Get specialized recruitment consulting services tailored to your company\'s needs and industry requirements.',
+    
     // Hero
     'connecting': 'Connecting',
     'job_seekers': 'Creher Candidates',
@@ -188,6 +192,10 @@ const translations = {
     'for_recruiters': 'Pour les Recruteurs',
     'find_a_job': 'Trouver un emploi',
     'hire_talent': 'Recruter',
+    
+    // Recruiter Page
+    'recruitment_consulting_title': 'Services de Recrutement',
+    'recruitment_consulting_description': 'Obtenez des services de conseil en recrutement spécialisés adaptés aux besoins de votre entreprise et aux exigences de votre secteur.',
     
     // Hero
     'connecting': 'Connecter les',
