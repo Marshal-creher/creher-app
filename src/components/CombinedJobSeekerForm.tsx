@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -16,13 +15,11 @@ const CombinedJobSeekerForm: React.FC = () => {
   const [uploadingFiles, setUploadingFiles] = useState(false);
 
   React.useEffect(() => {
-    // Create a hidden form for Netlify to detect
     const form = document.createElement('form');
     form.setAttribute('name', 'contact');
     form.setAttribute('data-netlify', 'true');
     form.setAttribute('hidden', 'true');
     
-    // Add all form fields
     const nameInput = document.createElement('input');
     nameInput.setAttribute('name', 'prenom');
     form.appendChild(nameInput);
@@ -67,7 +64,6 @@ const CombinedJobSeekerForm: React.FC = () => {
       const cvFile = formData.get('cv') as File;
       const coverLetterFile = formData.get('lettre') as File;
       
-      // Handle file uploads
       let cvUrl = null;
       let coverLetterUrl = null;
       
@@ -108,7 +104,6 @@ const CombinedJobSeekerForm: React.FC = () => {
       
       setUploadingFiles(false);
       
-      // Save data to Supabase
       const { error } = await supabase
         .from('job_seekers')
         .insert({
@@ -122,7 +117,6 @@ const CombinedJobSeekerForm: React.FC = () => {
         
       if (error) throw error;
       
-      // Also send to Netlify forms as a backup
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

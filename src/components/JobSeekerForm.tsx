@@ -7,10 +7,12 @@ import { useLanguage } from '@/context/LanguageContext';
 import { FileText } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
 
 const JobSeekerForm: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,22 +20,61 @@ const JobSeekerForm: React.FC = () => {
 
     try {
       const formData = new FormData(e.currentTarget);
+      const firstName = formData.get('prenom') as string;
+      const lastName = formData.get('nom') as string;
+      const phone = formData.get('telephone') as string;
+      const cvFile = formData.get('cv') as File;
+      
+      // Upload CV file to Supabase Storage
+      let cvUrl = null;
+      if (cvFile && cvFile instanceof File && cvFile.size > 0) {
+        const cvFileName = `${Date.now()}_${cvFile.name}`;
+        const { data: cvData, error: cvError } = await supabase.storage
+          .from('job_seeker_documents')
+          .upload(cvFileName, cvFile);
+          
+        if (cvError) {
+          throw new Error(`CV upload error: ${cvError.message}`);
+        }
+        
+        const { data: { publicUrl: cvPublicUrl } } = supabase.storage
+          .from('job_seeker_documents')
+          .getPublicUrl(cvFileName);
+          
+        cvUrl = cvPublicUrl;
+      }
+      
+      // Save data to Supabase
+      const { error } = await supabase
+        .from('job_seekers')
+        .insert({
+          first_name: firstName,
+          last_name: lastName,
+          email: '', // Placeholder as email is required in the database
+          phone: phone,
+          cv_url: cvUrl
+        });
+        
+      if (error) throw error;
+      
+      // Also send to Netlify forms as a backup
       await fetch('/', {
         method: 'POST',
         body: formData
       });
       
       toast({
-        title: "Succès",
-        description: "Merci pour votre envoi",
+        title: t ? t('success') : "Succès",
+        description: t ? t('application_submitted') : "Merci pour votre envoi",
       });
       
       // Reset form
       (e.target as HTMLFormElement).reset();
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur s'est produite. Veuillez réessayer.",
+        title: t ? t('error') : "Erreur",
+        description: t ? t('submission_error') : "Une erreur s'est produite. Veuillez réessayer.",
         variant: "destructive",
       });
     } finally {
@@ -80,6 +121,17 @@ const JobSeekerForm: React.FC = () => {
                 type="text"
                 required
                 placeholder="Votre nom"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email"
+                name="email"
+                type="email"
+                required
+                placeholder="Votre email"
               />
             </div>
             
