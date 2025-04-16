@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { BriefcaseBusiness, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from '@/context/LanguageContext';
+import { supabase } from "@/integrations/supabase/client";
 
 const companySize = [
   "1-10 employees",
@@ -71,7 +72,7 @@ const RecruiterForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (selectedServices.length === 0) {
@@ -85,13 +86,30 @@ const RecruiterForm: React.FC = () => {
 
     setLoading(true);
     
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      // Save the recruiter data to Supabase
+      const { error } = await supabase
+        .from('recruiters')
+        .insert({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          company_name: companyName,
+          company_size: size,
+          industry: industry,
+          consulting_needs: selectedServices,
+          additional_info: consultingNeeds
+        });
+        
+      if (error) throw error;
+      
       toast({
         title: t('request_submitted'),
         description: t('contact_shortly'),
       });
       
+      // Clear form
       setFirstName('');
       setLastName('');
       setEmail('');
@@ -101,7 +119,17 @@ const RecruiterForm: React.FC = () => {
       setIndustry('');
       setSelectedServices([]);
       setConsultingNeeds('');
-    }, 1500);
+      
+    } catch (error) {
+      console.error('Error submitting recruiter form:', error);
+      toast({
+        title: t('error'),
+        description: t('submission_error'),
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

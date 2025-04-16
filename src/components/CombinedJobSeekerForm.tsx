@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FileText } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import { supabase } from "@/integrations/supabase/client";
 
 const CombinedJobSeekerForm: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
+  const [uploadingFiles, setUploadingFiles] = useState(false);
 
   React.useEffect(() => {
     // Create a hidden form for Netlify to detect
@@ -58,9 +60,69 @@ const CombinedJobSeekerForm: React.FC = () => {
 
     try {
       const formData = new FormData(e.currentTarget);
+      const firstName = formData.get('prenom') as string;
+      const lastName = formData.get('nom') as string;
+      const email = formData.get('email') as string;
+      const phone = formData.get('telephone') as string;
+      const cvFile = formData.get('cv') as File;
+      const coverLetterFile = formData.get('lettre') as File;
       
-      formData.append('form-name', 'contact');
+      // Handle file uploads
+      let cvUrl = null;
+      let coverLetterUrl = null;
       
+      if (cvFile && cvFile instanceof File && cvFile.size > 0) {
+        setUploadingFiles(true);
+        const cvFileName = `${Date.now()}_${cvFile.name}`;
+        const { data: cvData, error: cvError } = await supabase.storage
+          .from('job_seeker_documents')
+          .upload(cvFileName, cvFile);
+          
+        if (cvError) {
+          throw new Error(`CV upload error: ${cvError.message}`);
+        }
+        
+        const { data: { publicUrl: cvPublicUrl } } = supabase.storage
+          .from('job_seeker_documents')
+          .getPublicUrl(cvFileName);
+          
+        cvUrl = cvPublicUrl;
+      }
+      
+      if (coverLetterFile && coverLetterFile instanceof File && coverLetterFile.size > 0) {
+        const coverLetterFileName = `${Date.now()}_${coverLetterFile.name}`;
+        const { data: coverData, error: coverError } = await supabase.storage
+          .from('job_seeker_documents')
+          .upload(coverLetterFileName, coverLetterFile);
+          
+        if (coverError) {
+          throw new Error(`Cover letter upload error: ${coverError.message}`);
+        }
+        
+        const { data: { publicUrl: coverPublicUrl } } = supabase.storage
+          .from('job_seeker_documents')
+          .getPublicUrl(coverLetterFileName);
+          
+        coverLetterUrl = coverPublicUrl;
+      }
+      
+      setUploadingFiles(false);
+      
+      // Save data to Supabase
+      const { error } = await supabase
+        .from('job_seekers')
+        .insert({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          cv_url: cvUrl,
+          cover_letter_url: coverLetterUrl
+        });
+        
+      if (error) throw error;
+      
+      // Also send to Netlify forms as a backup
       await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -74,14 +136,15 @@ const CombinedJobSeekerForm: React.FC = () => {
       
       (e.target as HTMLFormElement).reset();
     } catch (error) {
+      console.error('Form submission error:', error);
       toast({
         title: t('error'),
         description: t('submission_error'),
         variant: "destructive",
       });
-      console.error('Form submission error:', error);
     } finally {
       setLoading(false);
+      setUploadingFiles(false);
     }
   };
 
@@ -182,15 +245,15 @@ const CombinedJobSeekerForm: React.FC = () => {
           <Button 
             type="submit" 
             className="w-full md:w-auto bg-jobseeker hover:bg-jobseeker/90 text-white" 
-            disabled={loading}
+            disabled={loading || uploadingFiles}
           >
-            {loading ? (
+            {loading || uploadingFiles ? (
               <span className="flex items-center gap-2">
                 <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {t('sending')}
+                {uploadingFiles ? t('uploading_files') : t('sending')}
               </span>
             ) : (
               <span className="flex items-center gap-2">

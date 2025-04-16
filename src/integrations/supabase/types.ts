@@ -42,6 +42,81 @@ export type Database = {
         }
         Relationships: []
       }
+      job_seekers: {
+        Row: {
+          cover_letter_url: string | null
+          created_at: string
+          cv_url: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          phone: string | null
+        }
+        Insert: {
+          cover_letter_url?: string | null
+          created_at?: string
+          cv_url?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          phone?: string | null
+        }
+        Update: {
+          cover_letter_url?: string | null
+          created_at?: string
+          cv_url?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      recruiters: {
+        Row: {
+          additional_info: string | null
+          company_name: string
+          company_size: string
+          consulting_needs: string[] | null
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          industry: string
+          last_name: string
+          phone: string
+        }
+        Insert: {
+          additional_info?: string | null
+          company_name: string
+          company_size: string
+          consulting_needs?: string[] | null
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          industry: string
+          last_name: string
+          phone: string
+        }
+        Update: {
+          additional_info?: string | null
+          company_name?: string
+          company_size?: string
+          consulting_needs?: string[] | null
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          industry?: string
+          last_name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
