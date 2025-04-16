@@ -249,7 +249,7 @@ const translations = {
     'company_name': 'Nom de l\'Entreprise',
     'company_size': 'Taille de l\'Entreprise',
     'industry': 'Secteur d\'Activité',
-    'consulting_services_needed': 'Services de Conseil Souhaités',
+    'consulting_services_needed': 'Services de conseil souhaités',
     'describe_needs': 'Décrivez Vos Besoins',
     'request_submitted': 'Demande Envoyée avec Succès !',
     'contact_shortly': 'Nous vous contacterons prochainement pour discuter de vos besoins.',
