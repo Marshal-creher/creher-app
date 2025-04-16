@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 
-const JobSeekerForm: React.FC = () => {
+interface JobSeekerFormProps {
+  onSubmitSuccess?: () => void;
+}
+
+const JobSeekerForm: React.FC<JobSeekerFormProps> = ({ onSubmitSuccess }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
@@ -70,6 +73,11 @@ const JobSeekerForm: React.FC = () => {
       
       // Reset form
       (e.target as HTMLFormElement).reset();
+      
+      // Call the success callback if provided
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
