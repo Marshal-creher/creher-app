@@ -96,7 +96,7 @@ const translations = {
     'enter_company_name': 'Enter your company name',
     'select_company_size': 'Select company size',
     'select_industry': 'Select your industry',
-    'describe_needs_placeholder': 'Please describe your specific needs and what you\'re looking to achieve / Let us know when we can contact you...',
+    'describe_needs_placeholder': 'Please describe your specific needs / Let us know when we can contact you...',
     'consulting_form_description': 'Tell us about your company and consulting needs to get specialized HR services.',
     
     // Job Seeker Form
