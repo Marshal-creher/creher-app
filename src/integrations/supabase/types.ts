@@ -9,39 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      CREHER: {
-        Row: {
-          created_at: string
-          id: number
-        }
-        Insert: {
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          created_at?: string
-          id?: number
-        }
-        Relationships: []
-      }
-      "Creher table": {
-        Row: {
-          Content: string | null
-          created_at: string
-          id: number
-        }
-        Insert: {
-          Content?: string | null
-          created_at?: string
-          id?: number
-        }
-        Update: {
-          Content?: string | null
-          created_at?: string
-          id?: number
-        }
-        Relationships: []
-      }
       job_seekers: {
         Row: {
           cover_letter_url: string | null
