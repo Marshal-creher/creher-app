@@ -22,44 +22,14 @@ export const useJobSeekerSubmit = () => {
       const email = formData.get('email') as string;
       const phone = formData.get('telephone') as string;
       const cvFile = formData.get('cv') as File;
-      const coverLetterFile = formData.get('lettre') as File;
       
       console.log("Form data collected:", { firstName, lastName, email, phone });
       console.log("CV file:", cvFile instanceof File ? cvFile.name : "No CV file");
-      console.log("Cover letter file:", coverLetterFile instanceof File ? coverLetterFile.name : "No cover letter file");
       
       let cvUrl = null;
-      let coverLetterUrl = null;
       
-      try {
-        // Create storage bucket if it doesn't exist
-        console.log("Checking if storage bucket exists");
-        const { data: bucketList, error: bucketListError } = await supabase.storage.listBuckets();
-        
-        if (bucketListError) {
-          console.error("Error listing buckets:", bucketListError);
-        }
-        
-        const bucketExists = bucketList?.some(bucket => bucket.name === 'job_seeker_documents');
-        console.log("Bucket exists:", bucketExists);
-        
-        if (!bucketExists) {
-          console.log("Creating storage bucket");
-          const { data: newBucket, error: createBucketError } = await supabase.storage.createBucket('job_seeker_documents', {
-            public: true,
-            fileSizeLimit: 10485760, // 10MB
-          });
-          
-          if (createBucketError) {
-            console.error("Error creating bucket:", createBucketError);
-          } else {
-            console.log("Bucket created successfully:", newBucket);
-          }
-        }
-      } catch (bucketError) {
-        console.error("Error checking/creating bucket:", bucketError);
-        // Continue execution - the bucket might already exist
-      }
+      // Ensure the bucket exists
+      await createBucketIfNotExists();
       
       if (cvFile && cvFile instanceof File && cvFile.size > 0) {
         console.log("Uploading CV file:", cvFile.name, cvFile.size, "bytes");
@@ -71,7 +41,7 @@ export const useJobSeekerSubmit = () => {
             .from('job_seeker_documents')
             .upload(cvFileName, cvFile, {
               cacheControl: '3600',
-              upsert: false
+              upsert: true // Changed to true to overwrite existing files with the same name
             });
             
           if (cvError) {
@@ -97,37 +67,6 @@ export const useJobSeekerSubmit = () => {
         }
       }
       
-      if (coverLetterFile && coverLetterFile instanceof File && coverLetterFile.size > 0) {
-        console.log("Uploading cover letter file:", coverLetterFile.name, coverLetterFile.size, "bytes");
-        const coverLetterFileName = `${Date.now()}_${coverLetterFile.name.replace(/\s+/g, '_')}`;
-        
-        try {
-          const { data: coverData, error: coverError } = await supabase.storage
-            .from('job_seeker_documents')
-            .upload(coverLetterFileName, coverLetterFile, {
-              cacheControl: '3600',
-              upsert: false
-            });
-            
-          if (coverError) {
-            console.error("Cover letter upload error:", coverError);
-            throw new Error(`Cover letter upload error: ${coverError.message}`);
-          }
-          
-          console.log("Cover letter uploaded successfully:", coverData);
-          
-          const { data: { publicUrl: coverPublicUrl } } = supabase.storage
-            .from('job_seeker_documents')
-            .getPublicUrl(coverLetterFileName);
-            
-          coverLetterUrl = coverPublicUrl;
-          console.log("Cover letter public URL:", coverLetterUrl);
-        } catch (uploadError) {
-          console.error("Cover letter upload exception:", uploadError);
-          // Continue execution even if cover letter upload fails
-        }
-      }
-      
       setUploadingFiles(false);
       
       // Save data to Supabase
@@ -139,8 +78,7 @@ export const useJobSeekerSubmit = () => {
           last_name: lastName,
           email: email,
           phone: phone,
-          cv_url: cvUrl,
-          cover_letter_url: coverLetterUrl
+          cv_url: cvUrl
         })
         .select();
 
@@ -187,6 +125,48 @@ export const useJobSeekerSubmit = () => {
     } finally {
       setLoading(false);
       setUploadingFiles(false);
+    }
+  };
+
+  // Helper function to create the storage bucket if it doesn't exist
+  const createBucketIfNotExists = async () => {
+    try {
+      // First check if the bucket exists
+      const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+      
+      if (listError) {
+        console.error("Error listing buckets:", listError);
+        return;
+      }
+      
+      const bucketExists = buckets?.some(bucket => bucket.name === 'job_seeker_documents');
+      
+      if (!bucketExists) {
+        console.log("Creating job_seeker_documents bucket");
+        const { error: createError } = await supabase.storage.createBucket('job_seeker_documents', {
+          public: true,
+          fileSizeLimit: 10485760 // 10MB
+        });
+        
+        if (createError) {
+          console.error("Error creating bucket:", createError);
+        } else {
+          console.log("Bucket created successfully");
+          
+          // Set bucket to public
+          const { error: policyError } = await supabase.storage.from('job_seeker_documents')
+            .createSignedUrl('dummy.txt', 1); // Just to check if we can create policies
+            
+          if (policyError && policyError.message.includes('The resource was not found')) {
+            console.log("Setting up public access policy for the bucket");
+            // This is just a check - we'll actually set up policies in SQL later if needed
+          }
+        }
+      } else {
+        console.log("Bucket job_seeker_documents already exists");
+      }
+    } catch (error) {
+      console.error("Error checking/creating bucket:", error);
     }
   };
 

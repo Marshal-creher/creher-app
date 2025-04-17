@@ -97,6 +97,8 @@ export const useCVReview = () => {
         console.log("Using latest job seeker ID:", seekerId);
       }
       
+      console.log("Final seeker ID being used:", seekerId, "is_free_review value:", !hasUsedFreeReview);
+      
       // Check if there's already a review request for this job seeker
       const { data: existingRequest, error: checkError } = await supabase
         .from('cv_review_requests')
