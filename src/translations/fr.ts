@@ -196,13 +196,4 @@ export const frTranslations = {
   'additional_review_price': 'Révision Payante',
   'first_review_used': 'Votre première révision gratuite a été utilisée',
   'personal_information': 'Informations Personnelles',
-  
-  // Recruiter Table translations
-  recruiter_submissions: 'Soumissions des recruteurs',
-  recruiter_table_caption: 'Liste de toutes les soumissions des recruteurs',
-  date_submitted: 'Date de soumission',
-  no_recruiters_found: 'Aucun recruteur trouvé',
-  error_fetching_recruiters: 'Erreur lors de la récupération des données des recruteurs',
-  loading: 'Chargement...',
-  name: 'Nom',
-} as const;
+};

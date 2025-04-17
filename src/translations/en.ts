@@ -196,13 +196,4 @@ export const enTranslations = {
   'additional_review_price': 'Paid Review',
   'first_review_used': 'Your first free review has been used',
   'personal_information': 'Personal Information',
-  
-  // Recruiter Table translations
-  recruiter_submissions: 'Recruiter Submissions',
-  recruiter_table_caption: 'List of all recruiter submissions',
-  date_submitted: 'Date Submitted',
-  no_recruiters_found: 'No recruiters found',
-  error_fetching_recruiters: 'Error fetching recruiter data',
-  loading: 'Loading...',
-  name: 'Name',
-} as const;
+};
