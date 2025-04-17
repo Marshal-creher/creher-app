@@ -139,7 +139,7 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
           <input type="hidden" name="form-name" value="contact" />
           
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-jobseeker">{t('personal_info')}</h3>
+            <h3 className="text-lg font-semibold text-jobseeker">{t('personal_information')}</h3>
             <PersonalInfoSection 
               formData={personalInfo}
               onChange={handlePersonalInfoChange}

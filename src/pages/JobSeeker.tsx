@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import CombinedJobSeekerForm from '@/components/CombinedJobSeekerForm';
 import { UserRound } from 'lucide-react';
@@ -40,8 +40,6 @@ const JobSeeker: React.FC = () => {
                 isFormValid={formValid}
                 hasCVUploaded={cvUploaded}
                 onSubmitBoth={() => {
-                  // This will be triggered when the user clicks the CV review button
-                  // The logic for submitting both is inside the CombinedJobSeekerForm
                   const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
                   if (formSubmitButton) {
                     formSubmitButton.click();
