@@ -11,30 +11,30 @@ export type Database = {
     Tables: {
       cv_review_requests: {
         Row: {
+          completed_at: string | null
           id: string
           is_free_review: boolean | null
-          job_seeker_id: string | null
-          notes: string | null
+          job_seeker_id: string
           requested_at: string
-          reviewer_feedback: string | null
+          reviewer_notes: string | null
           status: string
         }
         Insert: {
+          completed_at?: string | null
           id?: string
           is_free_review?: boolean | null
-          job_seeker_id?: string | null
-          notes?: string | null
+          job_seeker_id: string
           requested_at?: string
-          reviewer_feedback?: string | null
+          reviewer_notes?: string | null
           status?: string
         }
         Update: {
+          completed_at?: string | null
           id?: string
           is_free_review?: boolean | null
-          job_seeker_id?: string | null
-          notes?: string | null
+          job_seeker_id?: string
           requested_at?: string
-          reviewer_feedback?: string | null
+          reviewer_notes?: string | null
           status?: string
         }
         Relationships: [
