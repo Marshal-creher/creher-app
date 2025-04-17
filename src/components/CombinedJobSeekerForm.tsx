@@ -44,7 +44,6 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
   
   // Document state
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [coverLetterFile, setCoverLetterFile] = useState<File | null>(null);
   
   // Form validation
   const [isFormValid, setIsFormValid] = useState(false);
@@ -87,7 +86,6 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       phone: ''
     });
     setCvFile(null);
-    setCoverLetterFile(null);
   };
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -106,11 +104,6 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     if (cvFile) {
       console.log("Adding CV file to formData", cvFile.name);
       formData.set('cv', cvFile);
-    }
-    
-    if (coverLetterFile) {
-      console.log("Adding cover letter file to formData", coverLetterFile.name);
-      formData.set('lettre', coverLetterFile);
     }
     
     // Log if CV review is requested
@@ -169,7 +162,6 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
 
           <JobSeekerDocumentsSection 
             onCVUpload={setCvFile}
-            onCoverLetterUpload={setCoverLetterFile}
           />
 
           <SubmitButton 

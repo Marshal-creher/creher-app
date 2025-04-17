@@ -177,6 +177,7 @@ export const enTranslations = {
   // CV Review Table translations
   'cv_review': 'CV Review Service',
   'cv_review_service': 'Professional CV Review Service',
+  'price': 'Price',
   'request_cv_review': 'Request a professional CV review',
   'cv_review_description': 'Our team of HR professionals will review your CV and provide personalized feedback to help you stand out to recruiters.',
   'free': 'FREE',
@@ -187,6 +188,8 @@ export const enTranslations = {
   'cv_review_error': 'There was an error submitting your CV review request. Please try again.',
   'no_job_seeker_profile': 'Please submit your application form first before requesting a CV review.',
   'uploading_files': 'Uploading files...',
+  'upload_cv_to_enable_review': 'Please upload your CV',
+  'complete_form_to_enable_review': 'Complete the form to enable review',
   
   // New translations for CV Review
   'first_review_free': 'First Review FREE',

@@ -177,6 +177,7 @@ export const frTranslations = {
   // CV Review Table
   'cv_review': 'Service de Révision de CV',
   'cv_review_service': 'Service Professionnel de Révision de CV',
+  'price': 'Prix',
   'request_cv_review': 'Demander une révision professionnelle de votre CV',
   'cv_review_description': 'Notre équipe de professionnels RH examinera votre CV et vous fournira des commentaires personnalisés pour vous aider à vous démarquer auprès des recruteurs.',
   'free': 'GRATUIT',
@@ -187,6 +188,8 @@ export const frTranslations = {
   'cv_review_error': 'Une erreur s\'est produite lors de la soumission de votre demande de révision de CV. Veuillez réessayer.',
   'no_job_seeker_profile': 'Veuillez d\'abord soumettre votre formulaire de candidature avant de demander une révision de CV.',
   'uploading_files': 'Téléchargement des fichiers...',
+  'upload_cv_to_enable_review': 'Veuillez télécharger votre CV',
+  'complete_form_to_enable_review': 'Complétez le formulaire pour activer la révision',
   
   // New translations for CV Review
   'first_review_free': 'Première Révision GRATUITE',
