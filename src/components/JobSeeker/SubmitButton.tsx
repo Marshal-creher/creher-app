@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { FileText } from 'lucide-react';
+import { FileText, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import LoadingButton from "@/components/ui/loading-button";
 
