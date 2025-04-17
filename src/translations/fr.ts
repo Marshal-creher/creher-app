@@ -175,7 +175,7 @@ export const frTranslations = {
   'error_occurred': 'Une erreur s\'est produite. Veuillez réessayer.',
   
   // CV Review Table
-  'free_cv_review': 'Service Gratuit de Révision de CV',
+  'cv_review': 'Service de Révision de CV',
   'cv_review_service': 'Service Professionnel de Révision de CV',
   'request_cv_review': 'Demander une révision professionnelle de votre CV',
   'cv_review_description': 'Notre équipe de professionnels RH examinera votre CV et vous fournira des commentaires personnalisés pour vous aider à vous démarquer auprès des recruteurs.',
