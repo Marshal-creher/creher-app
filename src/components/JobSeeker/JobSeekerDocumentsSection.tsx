@@ -7,12 +7,10 @@ import { FileText, Check } from 'lucide-react';
 
 interface JobSeekerDocumentsSectionProps {
   onCVUpload: (file: File | null) => void;
-  onCoverLetterUpload?: (file: File | null) => void;
 }
 
 const JobSeekerDocumentsSection: React.FC<JobSeekerDocumentsSectionProps> = ({
-  onCVUpload,
-  onCoverLetterUpload
+  onCVUpload
 }) => {
   const { t } = useLanguage();
   const [cvFileName, setCvFileName] = useState<string | null>(null);
