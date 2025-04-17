@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -25,46 +26,79 @@ const JobSeekerForm: React.FC<JobSeekerFormProps> = ({ onSubmitSuccess }) => {
       const formData = new FormData(e.currentTarget);
       const firstName = formData.get('prenom') as string;
       const lastName = formData.get('nom') as string;
+      const email = formData.get('email') as string;
       const phone = formData.get('telephone') as string;
       const cvFile = formData.get('cv') as File;
+      
+      console.log("Starting job seeker form submission...");
+      console.log("CV File:", cvFile ? cvFile.name : "No file");
       
       // Upload CV file to Supabase Storage
       let cvUrl = null;
       if (cvFile && cvFile instanceof File && cvFile.size > 0) {
         const cvFileName = `${Date.now()}_${cvFile.name}`;
+        
+        // Check file type
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!allowedTypes.includes(cvFile.type)) {
+          throw new Error(`File type ${cvFile.type} is not supported. Please upload PDF or Word documents.`);
+        }
+        
+        console.log("Uploading CV to storage...");
         const { data: cvData, error: cvError } = await supabase.storage
           .from('job_seeker_documents')
-          .upload(cvFileName, cvFile);
+          .upload(cvFileName, cvFile, {
+            contentType: cvFile.type,
+            cacheControl: '3600'
+          });
           
         if (cvError) {
+          console.error("CV upload error:", cvError);
           throw new Error(`CV upload error: ${cvError.message}`);
         }
         
+        console.log("CV uploaded successfully:", cvData);
+        
+        // Get the public URL for the uploaded file
         const { data: { publicUrl: cvPublicUrl } } = supabase.storage
           .from('job_seeker_documents')
           .getPublicUrl(cvFileName);
           
         cvUrl = cvPublicUrl;
+        console.log("CV Public URL:", cvUrl);
       }
       
       // Save data to Supabase
+      console.log("Saving data to database...");
+      // Use the 'from' method without type constraints for tables not in the TypeScript definitions
       const { error } = await supabase
         .from('job_seekers')
         .insert({
           first_name: firstName,
           last_name: lastName,
-          email: '', // Placeholder as email is required in the database
+          email: email,
           phone: phone,
           cv_url: cvUrl
         });
         
-      if (error) throw error;
+      if (error) {
+        console.error("Database error:", error);
+        throw error;
+      }
+      
+      console.log("Data saved successfully to database");
       
       // Also send to Netlify forms as a backup
-      await fetch('/', {
-        method: 'POST',
-        body: formData
-      });
+      try {
+        await fetch('/', {
+          method: 'POST',
+          body: formData
+        });
+        console.log("Data submitted to Netlify forms");
+      } catch (netlifyError) {
+        console.warn("Netlify form submission error (non-critical):", netlifyError);
+        // Continue since this is just a backup
+      }
       
       toast({
         title: t ? t('success') : "Succès",
@@ -82,7 +116,7 @@ const JobSeekerForm: React.FC<JobSeekerFormProps> = ({ onSubmitSuccess }) => {
       console.error('Form submission error:', error);
       toast({
         title: t ? t('error') : "Erreur",
-        description: t ? t('submission_error') : "Une erreur s'est produite. Veuillez réessayer.",
+        description: error instanceof Error ? error.message : (t ? t('submission_error') : "Une erreur s'est produite. Veuillez réessayer."),
         variant: "destructive",
       });
     } finally {

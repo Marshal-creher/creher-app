@@ -53,8 +53,16 @@ const CalendarBooking: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Use the generic Supabase client to avoid TypeScript errors with the new table
-      // @ts-ignore - Ignoring type check as the table exists in the database but not in TypeScript definitions
+      console.log("Starting booking submission...");
+      console.log("Booking details:", {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        booking_date: format(date, 'yyyy-MM-dd'),
+        booking_time: timeSlot
+      });
+      
+      // Use the raw interface to insert into resume_review_bookings
       const { error } = await supabase
         .from('resume_review_bookings')
         .insert({
@@ -65,7 +73,12 @@ const CalendarBooking: React.FC = () => {
           booking_time: timeSlot
         });
         
-      if (error) throw error;
+      if (error) {
+        console.error("Booking error:", error);
+        throw error;
+      }
+      
+      console.log("Booking submitted successfully");
       
       setConfirmDialogOpen(false);
       setBookingComplete(true);
