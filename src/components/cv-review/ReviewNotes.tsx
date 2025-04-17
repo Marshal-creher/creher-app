@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/hooks/useLanguageContext';
+import { Textarea } from "@/components/ui/textarea";
 
 interface ReviewNotesProps {
   notes: string;
@@ -11,8 +12,8 @@ const ReviewNotes = ({ notes, setNotes }: ReviewNotesProps) => {
   const { t } = useLanguage();
   
   return (
-    <textarea
-      className="w-full p-2 border rounded-md h-24 resize-none"
+    <Textarea
+      className="h-24 resize-none"
       placeholder={t('cv_review_notes_placeholder')}
       value={notes}
       onChange={(e) => setNotes(e.target.value)}
