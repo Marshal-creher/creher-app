@@ -13,7 +13,6 @@ export const useCVReview = () => {
   const [hasUsedFreeReview, setHasUsedFreeReview] = useState(false);
 
   useEffect(() => {
-    // Check if user has already used free review
     const checkFreeReviewStatus = async () => {
       try {
         const { data: latestJobSeeker, error: jobSeekerError } = await supabase
@@ -33,7 +32,7 @@ export const useCVReview = () => {
         
         const { data: existingReviews, error: reviewError } = await supabase
           .from('cv_review_requests')
-          .select('id')
+          .select('id, is_free_review')
           .eq('job_seeker_id', jobSeekerId);
         
         if (reviewError) {
@@ -41,7 +40,9 @@ export const useCVReview = () => {
           return;
         }
         
-        setHasUsedFreeReview(existingReviews && existingReviews.length > 0);
+        // Check if any previous reviews exist, especially free reviews
+        const hasFreeReview = existingReviews?.some(review => review.is_free_review);
+        setHasUsedFreeReview(hasFreeReview || false);
       } catch (error) {
         console.error('Error checking free review status:', error);
       }

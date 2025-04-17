@@ -12,6 +12,7 @@ export type Database = {
       cv_review_requests: {
         Row: {
           id: string
+          is_free_review: boolean | null
           job_seeker_id: string | null
           notes: string | null
           requested_at: string
@@ -20,6 +21,7 @@ export type Database = {
         }
         Insert: {
           id?: string
+          is_free_review?: boolean | null
           job_seeker_id?: string | null
           notes?: string | null
           requested_at?: string
@@ -28,6 +30,7 @@ export type Database = {
         }
         Update: {
           id?: string
+          is_free_review?: boolean | null
           job_seeker_id?: string | null
           notes?: string | null
           requested_at?: string
