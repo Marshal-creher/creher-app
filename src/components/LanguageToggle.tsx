@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage } from '@/hooks/useLanguageContext';
 
 const LanguageToggle: React.FC = () => {
   const { language, setLanguage } = useLanguage();
