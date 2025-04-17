@@ -36,10 +36,11 @@ export const useJobSeekerSubmit = () => {
         try {
           // Get file extension and set content type
           const fileExt = cvFile.name.split('.').pop()?.toLowerCase() || '';
-          const contentType = fileExt === 'pdf' ? 'application/pdf' : 
-                              fileExt === 'doc' ? 'application/msword' :
-                              fileExt === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' :
-                              'application/octet-stream';
+          const contentType = 
+            fileExt === 'pdf' ? 'application/pdf' : 
+            fileExt === 'doc' ? 'application/msword' :
+            fileExt === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' :
+            'application/octet-stream';
           
           console.log(`File extension: ${fileExt}, Content-Type: ${contentType}`);
           
