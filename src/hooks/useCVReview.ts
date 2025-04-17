@@ -41,7 +41,7 @@ export const useCVReview = () => {
           return;
         }
         
-        setHasUsedFreeReview(existingReviews.length > 0);
+        setHasUsedFreeReview(existingReviews && existingReviews.length > 0);
       } catch (error) {
         console.error('Error checking free review status:', error);
       }
@@ -98,6 +98,7 @@ export const useCVReview = () => {
         description: t('cv_review_confirmation'),
       });
       
+      // Reset form after successful submission
       setRequestReview(false);
       setNotes('');
       setHasUsedFreeReview(true);
