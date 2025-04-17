@@ -58,11 +58,6 @@ export const useCVReview = () => {
   }, []);
 
   const handleRequestReview = async (jobSeekerId?: string) => {
-    if (!requestReview) {
-      console.log("CV review not requested, skipping");
-      return false;
-    }
-    
     if (!jobSeekerId) {
       console.error("No job seeker ID provided for CV review request");
       toast({
@@ -77,7 +72,7 @@ export const useCVReview = () => {
     setLoading(true);
     
     try {
-      // Fetch the latest status of free review usage
+      // Fetch the latest status of free review usage for this specific job seeker
       const { data: existingReviews, error: checkError } = await supabase
         .from('cv_review_requests')
         .select('id, is_free_review')
@@ -85,9 +80,10 @@ export const useCVReview = () => {
       
       if (checkError) {
         console.error("Error checking existing reviews:", checkError);
+        throw checkError;
       }
       
-      // Determine if this should be a free review
+      // Determine if this should be a free review for this specific job seeker
       const hasFreeReview = existingReviews?.some(review => review.is_free_review) || false;
       const shouldBeFreeReview = !hasFreeReview;
       

@@ -30,6 +30,11 @@ const CVReviewTable: React.FC<CVReviewTableProps> = ({
 
   const isReviewEnabled = isFormValid && hasCVUploaded;
   
+  const handleRequestChange = (checked: boolean) => {
+    console.log("Changing review request state to:", checked);
+    setRequestReview(checked);
+  };
+  
   return (
     <Card className="border-jobseeker/20 shadow-sm">
       <CardHeader className="bg-jobseeker/5 border-b border-jobseeker/10">
@@ -50,7 +55,7 @@ const CVReviewTable: React.FC<CVReviewTableProps> = ({
               <ReviewServiceOption 
                 checked={requestReview}
                 hasUsedFreeReview={hasUsedFreeReview}
-                onCheckedChange={setRequestReview}
+                onCheckedChange={handleRequestChange}
                 disabled={!isReviewEnabled}
               />
               {!isReviewEnabled && (

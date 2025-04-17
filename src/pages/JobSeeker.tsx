@@ -42,17 +42,19 @@ const JobSeeker: React.FC = () => {
                 hasUsedFreeReview={hasUsedFreeReview}
                 onSubmitBoth={() => {
                   console.log("Submit both button clicked");
-                  // Set request review to true BEFORE clicking the form submit button
                   setRequestReview(true);
                   console.log("Request review set to true:", true);
                   
-                  const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-                  if (formSubmitButton) {
-                    console.log("Found form submit button, clicking it");
-                    formSubmitButton.click();
-                  } else {
-                    console.error("Submit button not found");
-                  }
+                  // Short timeout to ensure state update is applied before clicking
+                  setTimeout(() => {
+                    const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+                    if (formSubmitButton) {
+                      console.log("Found form submit button, clicking it");
+                      formSubmitButton.click();
+                    } else {
+                      console.error("Submit button not found");
+                    }
+                  }, 100);
                 }}
               />
             </div>

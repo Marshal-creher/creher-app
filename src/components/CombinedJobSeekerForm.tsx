@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from '@/hooks/useLanguageContext';
 import { useJobSeekerSubmit } from '@/hooks/useJobSeekerSubmit';
@@ -29,6 +29,13 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
   const { t } = useLanguage();
   const { handleSubmit, loading, uploadingFiles } = useJobSeekerSubmit();
   const { handleRequestReview } = useCVReview();
+  const reviewRequestRef = useRef(requestReview);
+  
+  // Update the ref when requestReview changes
+  useEffect(() => {
+    reviewRequestRef.current = requestReview;
+    console.log("requestReview changed in form:", requestReview);
+  }, [requestReview]);
   
   // Preferences state
   const [openToRemote, setOpenToRemote] = useState(false);
@@ -97,6 +104,10 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     e.preventDefault();
     console.log("Form submission started");
     
+    // Get the current value of requestReview from the ref
+    const shouldRequestReview = reviewRequestRef.current;
+    console.log("Should request CV review:", shouldRequestReview);
+    
     // Create a FormData object from the form
     const formData = new FormData(e.currentTarget);
     
@@ -111,9 +122,6 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       formData.set('cv', cvFile);
     }
     
-    // Log if CV review is requested - Add this logging to see the state
-    console.log("Request review status:", requestReview);
-    
     // Submit the form and get the job seeker ID if successful
     const result = await handleSubmit(e, formData);
     
@@ -121,9 +129,10 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       console.log("Form submission successful, jobSeekerId:", result.jobSeekerId);
       
       // If CV review is requested, handle that with the new job seeker ID
-      if (requestReview) {
+      if (shouldRequestReview) {
         console.log("Attempting to handle CV review request with ID:", result.jobSeekerId);
-        await handleRequestReview(result.jobSeekerId);
+        const reviewResult = await handleRequestReview(result.jobSeekerId);
+        console.log("CV review request result:", reviewResult);
       } else {
         console.log("CV review not requested, skipping request");
       }
