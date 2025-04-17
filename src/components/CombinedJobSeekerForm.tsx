@@ -112,18 +112,18 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     // Submit the form and get the job seeker ID if successful
     const result = await handleSubmit(e, formData);
     
-    if (result.success) {
+    if (result.success && result.jobSeekerId) {
       console.log("Form submission successful, jobSeekerId:", result.jobSeekerId);
       
       // If we're also submitting a CV review request, do that with the new job seeker ID
-      if (requestReview && result.jobSeekerId) {
+      if (requestReview) {
         console.log("Attempting to handle CV review request with ID:", result.jobSeekerId);
         await handleRequestReview(result.jobSeekerId);
       }
       
       onSubmitSuccess();
     } else {
-      console.error("Form submission failed");
+      console.error("Form submission failed or no job seeker ID returned");
     }
   };
 

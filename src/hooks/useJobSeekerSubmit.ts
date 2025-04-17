@@ -28,8 +28,17 @@ export const useJobSeekerSubmit = () => {
       
       let cvUrl = null;
       
-      // Ensure the bucket exists
-      await createBucketIfNotExists();
+      // Create the storage bucket if it doesn't exist
+      const { error: bucketError } = await createBucketIfNotExists();
+      
+      if (bucketError) {
+        console.error("Error creating bucket:", bucketError);
+        toast({
+          title: t('error'),
+          description: t('storage_bucket_error'),
+          variant: "destructive",
+        });
+      }
       
       if (cvFile && cvFile instanceof File && cvFile.size > 0) {
         console.log("Uploading CV file:", cvFile.name, cvFile.size, "bytes");
@@ -37,11 +46,21 @@ export const useJobSeekerSubmit = () => {
         const cvFileName = `${Date.now()}_${cvFile.name.replace(/\s+/g, '_')}`;
         
         try {
+          // Get file extension and set content type
+          const fileExt = cvFile.name.split('.').pop()?.toLowerCase() || '';
+          const contentType = fileExt === 'pdf' ? 'application/pdf' : 
+                              fileExt === 'doc' ? 'application/msword' :
+                              fileExt === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' :
+                              'application/octet-stream';
+          
+          console.log(`File extension: ${fileExt}, Content-Type: ${contentType}`);
+          
           const { data: cvData, error: cvError } = await supabase.storage
             .from('job_seeker_documents')
             .upload(cvFileName, cvFile, {
               cacheControl: '3600',
-              upsert: true // Changed to true to overwrite existing files with the same name
+              upsert: true,
+              contentType: contentType
             });
             
           if (cvError) {
@@ -96,7 +115,13 @@ export const useJobSeekerSubmit = () => {
       // Try to submit to Netlify forms as a backup
       try {
         console.log("Submitting to Netlify forms as backup");
-        const netlifyFormData = new FormData(e.currentTarget);
+        const netlifyFormData = new FormData();
+        netlifyFormData.append('form-name', 'contact');
+        netlifyFormData.append('prenom', firstName);
+        netlifyFormData.append('nom', lastName);
+        netlifyFormData.append('email', email);
+        netlifyFormData.append('telephone', phone || '');
+        
         await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -136,7 +161,7 @@ export const useJobSeekerSubmit = () => {
       
       if (listError) {
         console.error("Error listing buckets:", listError);
-        return;
+        return { error: listError };
       }
       
       const bucketExists = buckets?.some(bucket => bucket.name === 'job_seeker_documents');
@@ -150,23 +175,38 @@ export const useJobSeekerSubmit = () => {
         
         if (createError) {
           console.error("Error creating bucket:", createError);
+          return { error: createError };
         } else {
           console.log("Bucket created successfully");
           
-          // Set bucket to public
-          const { error: policyError } = await supabase.storage.from('job_seeker_documents')
-            .createSignedUrl('dummy.txt', 1); // Just to check if we can create policies
+          // Set bucket policy to public for all objects
+          const { error: policyError } = await supabase
+            .storage
+            .from('job_seeker_documents')
+            .createPolicy('allow-public-select', {
+              name: 'allow-public-select',
+              definition: {
+                match: { prefix: '', owner: '*' },
+                check: 'true',
+                action: 'select'
+              }
+            });
             
-          if (policyError && policyError.message.includes('The resource was not found')) {
-            console.log("Setting up public access policy for the bucket");
-            // This is just a check - we'll actually set up policies in SQL later if needed
+          if (policyError) {
+            console.error("Error setting bucket policy:", policyError);
+            return { error: policyError };
           }
+          
+          console.log("Bucket policy set to public successfully");
         }
       } else {
         console.log("Bucket job_seeker_documents already exists");
       }
+      
+      return { error: null };
     } catch (error) {
       console.error("Error checking/creating bucket:", error);
+      return { error };
     }
   };
 

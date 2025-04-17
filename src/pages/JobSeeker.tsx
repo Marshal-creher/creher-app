@@ -40,6 +40,7 @@ const JobSeeker: React.FC = () => {
                 isFormValid={formValid}
                 hasCVUploaded={cvUploaded}
                 onSubmitBoth={() => {
+                  setRequestReview(true);
                   const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
                   if (formSubmitButton) {
                     formSubmitButton.click();
