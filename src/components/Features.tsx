@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Award, FileText, MessageSquare, Search, Star, UserRound, BriefcaseBusiness, Briefcase, Scale, HardHat } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
+import { useLanguage } from '@/hooks/useLanguageContext';
 
 const Features: React.FC = () => {
   const { t } = useLanguage();
