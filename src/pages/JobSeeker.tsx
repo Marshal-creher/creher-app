@@ -35,7 +35,7 @@ const JobSeeker: React.FC = () => {
                 onSubmitBoth={() => {
                   // This will be triggered when the user clicks the CV review button
                   // The logic for submitting both is inside the CombinedJobSeekerForm
-                  const formSubmitButton = document.querySelector('button[type="submit"]');
+                  const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
                   if (formSubmitButton) {
                     formSubmitButton.click();
                   }
