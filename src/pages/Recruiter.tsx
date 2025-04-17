@@ -1,6 +1,8 @@
+
 import React from 'react';
 import Layout from '@/components/Layout';
 import RecruiterForm from '@/components/RecruiterForm';
+import RecruiterTable from '@/components/RecruiterTable';
 import { BriefcaseBusiness } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 
@@ -23,6 +25,7 @@ const Recruiter: React.FC = () => {
           
           <div className="max-w-3xl mx-auto">
             <RecruiterForm />
+            <RecruiterTable />
           </div>
         </div>
       </div>
