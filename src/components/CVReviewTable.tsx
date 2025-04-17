@@ -122,7 +122,7 @@ const CVReviewTable: React.FC = () => {
     <Card>
       <CardHeader>
         <CardTitle className="text-2xl text-jobseeker">
-          {t('cv_review')}
+          {t('free_cv_review')}
         </CardTitle>
       </CardHeader>
       <CardContent>
