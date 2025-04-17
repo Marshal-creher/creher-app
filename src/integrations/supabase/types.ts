@@ -9,6 +9,41 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cv_review_requests: {
+        Row: {
+          id: string
+          job_seeker_id: string | null
+          notes: string | null
+          requested_at: string
+          reviewer_feedback: string | null
+          status: string
+        }
+        Insert: {
+          id?: string
+          job_seeker_id?: string | null
+          notes?: string | null
+          requested_at?: string
+          reviewer_feedback?: string | null
+          status?: string
+        }
+        Update: {
+          id?: string
+          job_seeker_id?: string | null
+          notes?: string | null
+          requested_at?: string
+          reviewer_feedback?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cv_review_requests_job_seeker_id_fkey"
+            columns: ["job_seeker_id"]
+            isOneToOne: false
+            referencedRelation: "job_seekers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_seekers: {
         Row: {
           cover_letter_url: string | null
@@ -81,6 +116,39 @@ export type Database = {
           industry?: string
           last_name?: string
           phone?: string
+        }
+        Relationships: []
+      }
+      resume_review_bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string
+          created_at: string
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          user_id: string | null
+        }
+        Insert: {
+          booking_date: string
+          booking_time: string
+          created_at?: string
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          user_id?: string | null
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string
+          created_at?: string
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          user_id?: string | null
         }
         Relationships: []
       }

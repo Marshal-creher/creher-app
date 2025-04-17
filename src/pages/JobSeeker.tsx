@@ -4,6 +4,7 @@ import Layout from '@/components/Layout';
 import CombinedJobSeekerForm from '@/components/CombinedJobSeekerForm';
 import { UserRound } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
+import CVReviewTable from '@/components/CVReviewTable';
 
 const JobSeeker: React.FC = () => {
   const { t } = useLanguage();
@@ -24,6 +25,10 @@ const JobSeeker: React.FC = () => {
           
           <div className="max-w-3xl mx-auto">
             <CombinedJobSeekerForm />
+            
+            <div className="mt-10">
+              <CVReviewTable />
+            </div>
           </div>
         </div>
       </div>

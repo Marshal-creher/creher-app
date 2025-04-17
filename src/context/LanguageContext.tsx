@@ -184,6 +184,19 @@ const translations = {
     'send': 'Send',
     'thanks_for_submission': 'Thank you for your submission',
     'error_occurred': 'An error occurred. Please try again.',
+    
+    // CV Review Table
+    'free_cv_review': 'Free CV Review Service',
+    'cv_review_service': 'Professional CV Review Service',
+    'request_cv_review': 'Request a professional CV review',
+    'cv_review_description': 'Our team of HR professionals will review your CV and provide personalized feedback to help you stand out to recruiters.',
+    'free': 'FREE',
+    'cv_review_notes_placeholder': 'Any specific areas you would like us to focus on in our review? (optional)',
+    'request_review': 'Request CV Review',
+    'cv_review_requested': 'CV Review Requested',
+    'cv_review_confirmation': 'Your CV review request has been submitted. Our team will contact you soon.',
+    'cv_review_error': 'There was an error submitting your CV review request. Please try again.',
+    'no_job_seeker_profile': 'Please submit your application form first before requesting a CV review.',
   },
   fr: {
     // Navbar
@@ -360,6 +373,19 @@ const translations = {
     'send': 'Envoyer',
     'thanks_for_submission': 'Merci pour votre envoi',
     'error_occurred': 'Une erreur s\'est produite. Veuillez réessayer.',
+    
+    // CV Review Table
+    'free_cv_review': 'Service Gratuit de Révision de CV',
+    'cv_review_service': 'Service Professionnel de Révision de CV',
+    'request_cv_review': 'Demander une révision professionnelle de votre CV',
+    'cv_review_description': 'Notre équipe de professionnels RH examinera votre CV et vous fournira des commentaires personnalisés pour vous aider à vous démarquer auprès des recruteurs.',
+    'free': 'GRATUIT',
+    'cv_review_notes_placeholder': 'Des domaines spécifiques sur lesquels vous souhaiteriez que nous nous concentrions dans notre révision? (optionnel)',
+    'request_review': 'Demander la Révision du CV',
+    'cv_review_requested': 'Révision de CV Demandée',
+    'cv_review_confirmation': 'Votre demande de révision de CV a été soumise. Notre équipe vous contactera bientôt.',
+    'cv_review_error': 'Une erreur s\'est produite lors de la soumission de votre demande de révision de CV. Veuillez réessayer.',
+    'no_job_seeker_profile': 'Veuillez d\'abord soumettre votre formulaire de candidature avant de demander une révision de CV.',
   }
 };
 
