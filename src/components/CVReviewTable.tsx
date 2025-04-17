@@ -28,7 +28,11 @@ const CVReviewTable: React.FC = () => {
         .order('created_at', { ascending: false })
         .limit(1);
         
-      if (jobSeekerError) throw jobSeekerError;
+      if (jobSeekerError) {
+        console.error("Error fetching job seeker:", jobSeekerError);
+        throw jobSeekerError;
+      }
+      
       if (!latestJobSeeker || latestJobSeeker.length === 0) {
         toast({
           title: t('error'),
@@ -45,10 +49,14 @@ const CVReviewTable: React.FC = () => {
         .from('cv_review_requests')
         .insert({
           job_seeker_id: jobSeekerId,
-          notes: notes
+          notes: notes,
+          status: 'pending'
         });
         
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("Error inserting CV review request:", insertError);
+        throw insertError;
+      }
       
       toast({
         title: t('cv_review_requested'),

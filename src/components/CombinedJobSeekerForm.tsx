@@ -8,12 +8,17 @@ import { Label } from "@/components/ui/label";
 import { FileText } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import { supabase } from "@/integrations/supabase/client";
+import PreferencesSection from './JobSeeker/PreferencesSection';
 
 const CombinedJobSeekerForm: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const { t } = useLanguage();
   const [uploadingFiles, setUploadingFiles] = useState(false);
+  
+  // Preferences state
+  const [openToRemote, setOpenToRemote] = useState(false);
+  const [openToRelocation, setOpenToRelocation] = useState(false);
 
   React.useEffect(() => {
     const form = document.createElement('form');
@@ -68,14 +73,24 @@ const CombinedJobSeekerForm: React.FC = () => {
       let cvUrl = null;
       let coverLetterUrl = null;
       
+      // Create the storage bucket if it doesn't exist (this doesn't fail if it already exists)
+      await supabase.storage.createBucket('job_seeker_documents', {
+        public: true,
+        fileSizeLimit: 10485760, // 10MB
+      });
+      
       if (cvFile && cvFile instanceof File && cvFile.size > 0) {
         setUploadingFiles(true);
         const cvFileName = `${Date.now()}_${cvFile.name}`;
         const { data: cvData, error: cvError } = await supabase.storage
           .from('job_seeker_documents')
-          .upload(cvFileName, cvFile);
+          .upload(cvFileName, cvFile, {
+            cacheControl: '3600',
+            upsert: false
+          });
           
         if (cvError) {
+          console.error("CV upload error:", cvError);
           throw new Error(`CV upload error: ${cvError.message}`);
         }
         
@@ -90,9 +105,13 @@ const CombinedJobSeekerForm: React.FC = () => {
         const coverLetterFileName = `${Date.now()}_${coverLetterFile.name}`;
         const { data: coverData, error: coverError } = await supabase.storage
           .from('job_seeker_documents')
-          .upload(coverLetterFileName, coverLetterFile);
+          .upload(coverLetterFileName, coverLetterFile, {
+            cacheControl: '3600',
+            upsert: false
+          });
           
         if (coverError) {
+          console.error("Cover letter upload error:", coverError);
           throw new Error(`Cover letter upload error: ${coverError.message}`);
         }
         
@@ -105,7 +124,7 @@ const CombinedJobSeekerForm: React.FC = () => {
       
       setUploadingFiles(false);
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('job_seekers')
         .insert({
           first_name: firstName,
@@ -114,15 +133,25 @@ const CombinedJobSeekerForm: React.FC = () => {
           phone: phone,
           cv_url: cvUrl,
           cover_letter_url: coverLetterUrl
-        });
-        
-      if (error) throw error;
+        })
+        .select();
+
+      if (error) {
+        console.error("Database insertion error:", error);
+        throw error;
+      }
       
-      await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
-      });
+      // Try to submit to Netlify forms as a backup
+      try {
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData as any).toString()
+        });
+      } catch (netlifyError) {
+        console.warn("Netlify form submission failed, but Supabase succeeded:", netlifyError);
+        // Continue since we already saved to Supabase
+      }
       
       toast({
         title: t('profile_submitted'),
@@ -130,6 +159,8 @@ const CombinedJobSeekerForm: React.FC = () => {
       });
       
       (e.target as HTMLFormElement).reset();
+      setOpenToRemote(false);
+      setOpenToRelocation(false);
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
@@ -163,7 +194,7 @@ const CombinedJobSeekerForm: React.FC = () => {
           <input type="hidden" name="form-name" value="contact" />
           
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('first_name')}</h3>
+            <h3 className="text-lg font-semibold">{t('personal_info')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor="prenom">{t('first_name')}</Label>
@@ -212,7 +243,17 @@ const CombinedJobSeekerForm: React.FC = () => {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('upload_resume')}</h3>
+            <h3 className="text-lg font-semibold">{t('preferences')}</h3>
+            <PreferencesSection 
+              openToRemote={openToRemote}
+              setOpenToRemote={setOpenToRemote}
+              openToRelocation={openToRelocation}
+              setOpenToRelocation={setOpenToRelocation}
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">{t('documents')}</h3>
             <div className="space-y-2">
               <Label htmlFor="cv">{t('upload_resume')} (PDF, DOC, DOCX)</Label>
               <Input 
@@ -226,7 +267,7 @@ const CombinedJobSeekerForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lettre">{t('cover_letter')} ({t('other')})</Label>
+              <Label htmlFor="lettre">{t('cover_letter')} ({t('optional')})</Label>
               <Input 
                 id="lettre"
                 name="lettre"
