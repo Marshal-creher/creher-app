@@ -79,57 +79,23 @@ export const useCVReview = () => {
     try {
       console.log("Final seeker ID being used:", jobSeekerId, "is_free_review value:", !hasUsedFreeReview);
       
-      // Check if there's already a review request for this job seeker
-      const { data: existingRequest, error: checkError } = await supabase
+      // Insert new CV review request - use insert instead of upsert to fix the issue
+      console.log("Inserting new CV review request for job seeker ID:", jobSeekerId);
+      const { data, error: insertError } = await supabase
         .from('cv_review_requests')
-        .select('id')
-        .eq('job_seeker_id', jobSeekerId)
-        .maybeSingle();
-      
-      if (checkError) {
-        console.error("Error checking existing review requests:", checkError);
-        throw checkError;
+        .insert({
+          job_seeker_id: jobSeekerId,
+          status: 'pending',
+          is_free_review: !hasUsedFreeReview
+        })
+        .select();
+        
+      if (insertError) {
+        console.error("Error inserting CV review request:", insertError);
+        throw insertError;
       }
       
-      if (existingRequest) {
-        console.log("Review request already exists for this job seeker, updating it");
-        
-        // Update existing request
-        const { data: updatedData, error: updateError } = await supabase
-          .from('cv_review_requests')
-          .update({
-            status: 'pending',
-            is_free_review: !hasUsedFreeReview,
-            requested_at: new Date().toISOString()
-          })
-          .eq('id', existingRequest.id)
-          .select();
-          
-        if (updateError) {
-          console.error("Error updating CV review request:", updateError);
-          throw updateError;
-        }
-        
-        console.log("CV review request updated:", updatedData);
-      } else {
-        // Insert new CV review request
-        console.log("Inserting new CV review request for job seeker ID:", jobSeekerId);
-        const { data, error: insertError } = await supabase
-          .from('cv_review_requests')
-          .insert({
-            job_seeker_id: jobSeekerId,
-            status: 'pending',
-            is_free_review: !hasUsedFreeReview
-          })
-          .select();
-          
-        if (insertError) {
-          console.error("Error inserting CV review request:", insertError);
-          throw insertError;
-        }
-        
-        console.log("CV review request created:", data);
-      }
+      console.log("CV review request created:", data);
       
       toast({
         title: t('cv_review_requested'),
