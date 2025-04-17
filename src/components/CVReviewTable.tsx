@@ -8,7 +8,17 @@ import { useCVReview } from '@/hooks/useCVReview';
 import LoadingButton from '@/components/ui/loading-button';
 import ReviewServiceOption from '@/components/cv-review/ReviewServiceOption';
 
-const CVReviewTable: React.FC = () => {
+interface CVReviewTableProps {
+  isFormValid: boolean;
+  hasCVUploaded: boolean;
+  onSubmitBoth: () => void;
+}
+
+const CVReviewTable: React.FC<CVReviewTableProps> = ({ 
+  isFormValid, 
+  hasCVUploaded,
+  onSubmitBoth
+}) => {
   const { t } = useLanguage();
   const { 
     loading, 
@@ -17,6 +27,23 @@ const CVReviewTable: React.FC = () => {
     hasUsedFreeReview, 
     handleRequestReview 
   } = useCVReview();
+
+  const isReviewEnabled = isFormValid && hasCVUploaded;
+  
+  // If form not valid or CV not uploaded, disable the review option
+  React.useEffect(() => {
+    if (!isReviewEnabled && requestReview) {
+      setRequestReview(false);
+    }
+  }, [isReviewEnabled, requestReview, setRequestReview]);
+
+  const handleSubmitBothClick = () => {
+    if (requestReview) {
+      onSubmitBoth();
+    } else {
+      handleRequestReview();
+    }
+  };
 
   return (
     <Card>
@@ -38,14 +65,22 @@ const CVReviewTable: React.FC = () => {
                 checked={requestReview}
                 hasUsedFreeReview={hasUsedFreeReview}
                 onCheckedChange={setRequestReview}
+                disabled={!isReviewEnabled}
               />
+              {!isReviewEnabled && requestReview && (
+                <TableRow>
+                  <TableCell colSpan={2} className="text-amber-600 text-sm">
+                    {!hasCVUploaded ? t('upload_cv_to_enable_review') : t('complete_form_to_enable_review')}
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
           
           {requestReview && (
             <LoadingButton 
-              onClick={handleRequestReview}
-              disabled={!requestReview}
+              onClick={handleSubmitBothClick}
+              disabled={!isReviewEnabled || !requestReview}
               loading={loading}
               loadingText={t('processing')}
               icon={<FileCheck size={18} />}

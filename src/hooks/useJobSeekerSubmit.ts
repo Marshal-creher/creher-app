@@ -10,12 +10,12 @@ export const useJobSeekerSubmit = () => {
   const [uploadingFiles, setUploadingFiles] = useState(false);
   const { t } = useLanguage();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, customFormData?: FormData) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = customFormData || new FormData(e.currentTarget);
       const firstName = formData.get('prenom') as string;
       const lastName = formData.get('nom') as string;
       const email = formData.get('email') as string;
@@ -124,6 +124,9 @@ export const useJobSeekerSubmit = () => {
         throw error;
       }
       
+      // Get the newly created job seeker ID
+      const jobSeekerId = data && data[0] ? data[0].id : null;
+      
       // Try to submit to Netlify forms as a backup
       try {
         const netlifyFormData = new FormData(e.currentTarget);
@@ -142,7 +145,7 @@ export const useJobSeekerSubmit = () => {
         description: t('profile_success'),
       });
       
-      return true; // Successful submission
+      return { success: true, jobSeekerId };
     } catch (error) {
       console.error('Form submission error:', error);
       toast({
@@ -150,7 +153,7 @@ export const useJobSeekerSubmit = () => {
         description: t('submission_error'),
         variant: "destructive",
       });
-      return false;
+      return { success: false, jobSeekerId: null };
     } finally {
       setLoading(false);
       setUploadingFiles(false);

@@ -8,12 +8,14 @@ interface ReviewServiceOptionProps {
   checked: boolean;
   hasUsedFreeReview: boolean;
   onCheckedChange: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
 const ReviewServiceOption = ({ 
   checked, 
   hasUsedFreeReview, 
-  onCheckedChange 
+  onCheckedChange,
+  disabled = false
 }: ReviewServiceOptionProps) => {
   const { t } = useLanguage();
   
@@ -25,11 +27,13 @@ const ReviewServiceOption = ({
             id="requestReview" 
             checked={checked}
             onCheckedChange={(checked) => onCheckedChange(checked as boolean)}
+            disabled={disabled}
+            className={disabled ? "opacity-50 cursor-not-allowed" : ""}
           />
           <div className="ml-2">
             <label 
               htmlFor="requestReview" 
-              className="font-medium cursor-pointer"
+              className={`font-medium ${disabled ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
             >
               {t('request_cv_review')}
             </label>

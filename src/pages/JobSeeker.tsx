@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import CombinedJobSeekerForm from '@/components/CombinedJobSeekerForm';
 import { UserRound } from 'lucide-react';
@@ -8,6 +8,8 @@ import CVReviewTable from '@/components/CVReviewTable';
 
 const JobSeeker: React.FC = () => {
   const { t } = useLanguage();
+  const [formValid, setFormValid] = useState(false);
+  const [cvUploaded, setCvUploaded] = useState(false);
   
   return (
     <Layout>
@@ -27,7 +29,18 @@ const JobSeeker: React.FC = () => {
             <CombinedJobSeekerForm />
             
             <div className="mt-10">
-              <CVReviewTable />
+              <CVReviewTable 
+                isFormValid={formValid}
+                hasCVUploaded={cvUploaded}
+                onSubmitBoth={() => {
+                  // This will be triggered when the user clicks the CV review button
+                  // The logic for submitting both is inside the CombinedJobSeekerForm
+                  const formSubmitButton = document.querySelector('button[type="submit"]');
+                  if (formSubmitButton) {
+                    formSubmitButton.click();
+                  }
+                }}
+              />
             </div>
           </div>
         </div>
