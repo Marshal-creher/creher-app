@@ -175,7 +175,7 @@ export const enTranslations = {
   'error_occurred': 'An error occurred. Please try again.',
   
   // CV Review Table translations
-  'cv_review': 'CV Review Service', // Changed from 'free_cv_review'
+  'cv_review': 'CV Review Service',
   'cv_review_service': 'Professional CV Review Service',
   'request_cv_review': 'Request a professional CV review',
   'cv_review_description': 'Our team of HR professionals will review your CV and provide personalized feedback to help you stand out to recruiters.',
@@ -192,4 +192,5 @@ export const enTranslations = {
   'first_review_free': 'First Review FREE',
   'additional_review_price': 'Paid Review',
   'first_review_used': 'Your first free review has been used',
+  'personal_information': 'Personal Information',
 };

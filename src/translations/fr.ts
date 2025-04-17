@@ -192,4 +192,5 @@ export const frTranslations = {
   'first_review_free': 'Première Révision GRATUITE',
   'additional_review_price': 'Révision Payante',
   'first_review_used': 'Votre première révision gratuite a été utilisée',
+  'personal_information': 'Informations Personnelles',
 };
