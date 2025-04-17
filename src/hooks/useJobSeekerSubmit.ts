@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/hooks/useLanguageContext';
@@ -43,44 +42,32 @@ export const useJobSeekerSubmit = () => {
           
           console.log(`File extension: ${fileExt}, Content-Type: ${contentType}`);
           
-          // First, check if the bucket exists
-          const { data: buckets } = await supabase.storage.listBuckets();
-          const bucketExists = buckets?.some(bucket => bucket.name === 'job_seeker_documents');
-          
-          // If bucket doesn't exist, we'll inform the user but continue with database save
-          if (!bucketExists) {
-            console.log("Warning: job_seeker_documents bucket does not exist");
+          // Upload file to Supabase storage
+          const { data: cvData, error: cvError } = await supabase.storage
+            .from('job_seeker_documents')
+            .upload(cvFileName, cvFile, {
+              cacheControl: '3600',
+              upsert: true,
+              contentType: contentType
+            });
             
-            // Skip bucket creation attempt since it causes RLS error
-            // We'll save the job seeker data without a CV
+          if (cvError) {
+            console.error("CV upload error:", cvError);
+            
+            toast({
+              title: t('warning'),
+              description: t('cv_upload_error'),
+              variant: "destructive",
+            });
           } else {
-            // Bucket exists, proceed with upload
-            const { data: cvData, error: cvError } = await supabase.storage
+            console.log("CV uploaded successfully:", cvData);
+            
+            const { data: { publicUrl: cvPublicUrl } } = supabase.storage
               .from('job_seeker_documents')
-              .upload(cvFileName, cvFile, {
-                cacheControl: '3600',
-                upsert: true
-              });
+              .getPublicUrl(cvFileName);
               
-            if (cvError) {
-              console.error("CV upload error:", cvError);
-              
-              // Still continue with form submission even if CV upload fails
-              toast({
-                title: t('warning'),
-                description: t('cv_upload_error'),
-                variant: "destructive",
-              });
-            } else {
-              console.log("CV uploaded successfully:", cvData);
-              
-              const { data: { publicUrl: cvPublicUrl } } = supabase.storage
-                .from('job_seeker_documents')
-                .getPublicUrl(cvFileName);
-                
-              cvUrl = cvPublicUrl;
-              console.log("CV public URL:", cvUrl);
-            }
+            cvUrl = cvPublicUrl;
+            console.log("CV public URL:", cvUrl);
           }
         } catch (uploadError) {
           console.error("CV upload exception:", uploadError);
@@ -89,7 +76,6 @@ export const useJobSeekerSubmit = () => {
             description: t('cv_upload_error'),
             variant: "destructive",
           });
-          // Continue with form submission without the CV
         }
       }
       
