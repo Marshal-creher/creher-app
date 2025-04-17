@@ -19,9 +19,9 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
   const { t } = useLanguage();
 
   return (
-    <>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
       <div className="space-y-2">
-        <Label htmlFor="prenom" className="flex items-center gap-2">
+        <Label htmlFor="prenom" className="flex items-center gap-2 text-gray-700">
           <UserRound size={16} className="text-jobseeker" />
           {t('first_name')}
         </Label>
@@ -38,7 +38,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="nom" className="flex items-center gap-2">
+        <Label htmlFor="nom" className="flex items-center gap-2 text-gray-700">
           <UserRound size={16} className="text-jobseeker" />
           {t('last_name')}
         </Label>
@@ -55,7 +55,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email" className="flex items-center gap-2">
+        <Label htmlFor="email" className="flex items-center gap-2 text-gray-700">
           <Mail size={16} className="text-jobseeker" />
           {t('email')}
         </Label>
@@ -72,7 +72,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="telephone" className="flex items-center gap-2">
+        <Label htmlFor="telephone" className="flex items-center gap-2 text-gray-700">
           <Phone size={16} className="text-jobseeker" />
           {t('phone')}
         </Label>
@@ -87,7 +87,7 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
           className="border-gray-300 focus:border-jobseeker focus:ring-jobseeker"
         />
       </div>
-    </>
+    </div>
   );
 };
 

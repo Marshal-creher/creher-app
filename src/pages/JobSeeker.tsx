@@ -1,15 +1,17 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import CombinedJobSeekerForm from '@/components/CombinedJobSeekerForm';
 import { UserRound } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import CVReviewTable from '@/components/CVReviewTable';
+import { useCVReview } from '@/hooks/useCVReview';
 
 const JobSeeker: React.FC = () => {
   const { t } = useLanguage();
   const [formValid, setFormValid] = useState(false);
   const [cvUploaded, setCvUploaded] = useState(false);
+  const { requestReview, setRequestReview } = useCVReview();
   
   return (
     <Layout>
@@ -26,7 +28,12 @@ const JobSeeker: React.FC = () => {
           </div>
           
           <div className="max-w-3xl mx-auto">
-            <CombinedJobSeekerForm />
+            <CombinedJobSeekerForm 
+              onFormValidChange={setFormValid}
+              onCVUploadChange={setCvUploaded}
+              requestReview={requestReview}
+              onRequestReviewChange={setRequestReview}
+            />
             
             <div className="mt-10">
               <CVReviewTable 

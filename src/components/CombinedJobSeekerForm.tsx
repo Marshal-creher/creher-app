@@ -13,7 +13,19 @@ import PreferencesSection from './JobSeeker/PreferencesSection';
 import JobSeekerDocumentsSection from './JobSeeker/JobSeekerDocumentsSection';
 import SubmitButton from './JobSeeker/SubmitButton';
 
-const CombinedJobSeekerForm: React.FC = () => {
+interface CombinedJobSeekerFormProps {
+  onFormValidChange?: (isValid: boolean) => void;
+  onCVUploadChange?: (hasCV: boolean) => void;
+  requestReview?: boolean;
+  onRequestReviewChange?: (value: boolean) => void;
+}
+
+const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({ 
+  onFormValidChange, 
+  onCVUploadChange,
+  requestReview = false,
+  onRequestReviewChange
+}) => {
   const { t } = useLanguage();
   const { handleSubmit, loading, uploadingFiles } = useJobSeekerSubmit();
   const { handleRequestReview } = useCVReview();
@@ -46,7 +58,16 @@ const CombinedJobSeekerForm: React.FC = () => {
       personalInfo.phone.trim() !== '';
     
     setIsFormValid(valid);
-  }, [personalInfo]);
+    if (onFormValidChange) {
+      onFormValidChange(valid);
+    }
+  }, [personalInfo, onFormValidChange]);
+  
+  useEffect(() => {
+    if (onCVUploadChange) {
+      onCVUploadChange(cvFile !== null);
+    }
+  }, [cvFile, onCVUploadChange]);
   
   const handlePersonalInfoChange = (field: string, value: string) => {
     setPersonalInfo(prev => ({
@@ -69,7 +90,7 @@ const CombinedJobSeekerForm: React.FC = () => {
     setCoverLetterFile(null);
   };
   
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, withReview = false) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     // Create a FormData object from the form
@@ -94,19 +115,11 @@ const CombinedJobSeekerForm: React.FC = () => {
     
     if (result.success) {
       // If we're also submitting a CV review request, do that with the new job seeker ID
-      if (withReview && result.jobSeekerId) {
+      if (requestReview && result.jobSeekerId) {
         await handleRequestReview(result.jobSeekerId);
       }
       
       onSubmitSuccess();
-    }
-  };
-  
-  // Function to handle both form submission and CV review request
-  const handleSubmitBoth = () => {
-    const formElement = document.querySelector('form[name="contact"]') as HTMLFormElement;
-    if (formElement) {
-      handleFormSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>, true);
     }
   };
 
@@ -120,23 +133,21 @@ const CombinedJobSeekerForm: React.FC = () => {
           method="POST" 
           data-netlify="true" 
           encType="multipart/form-data"
-          onSubmit={(e) => handleFormSubmit(e)} 
+          onSubmit={handleFormSubmit} 
           className="space-y-6"
         >
           <input type="hidden" name="form-name" value="contact" />
           
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('personal_info')}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <PersonalInfoSection 
-                formData={personalInfo}
-                onChange={handlePersonalInfoChange}
-              />
-            </div>
+            <h3 className="text-lg font-semibold text-jobseeker">{t('personal_info')}</h3>
+            <PersonalInfoSection 
+              formData={personalInfo}
+              onChange={handlePersonalInfoChange}
+            />
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('preferences')}</h3>
+            <h3 className="text-lg font-semibold text-jobseeker">{t('preferences')}</h3>
             <PreferencesSection 
               openToRemote={openToRemote}
               setOpenToRemote={setOpenToRemote}

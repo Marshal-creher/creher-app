@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Table, TableHeader, TableRow, TableHead, TableBody } from "@/components/ui/table";
 import { FileCheck } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import { useCVReview } from '@/hooks/useCVReview';
@@ -24,40 +24,25 @@ const CVReviewTable: React.FC<CVReviewTableProps> = ({
     loading, 
     requestReview, 
     setRequestReview, 
-    hasUsedFreeReview, 
-    handleRequestReview 
+    hasUsedFreeReview
   } = useCVReview();
 
   const isReviewEnabled = isFormValid && hasCVUploaded;
   
-  // If form not valid or CV not uploaded, disable the review option
-  React.useEffect(() => {
-    if (!isReviewEnabled && requestReview) {
-      setRequestReview(false);
-    }
-  }, [isReviewEnabled, requestReview, setRequestReview]);
-
-  const handleSubmitBothClick = () => {
-    if (requestReview) {
-      onSubmitBoth();
-    } else {
-      handleRequestReview();
-    }
-  };
-
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-jobseeker/20 shadow-sm">
+      <CardHeader className="bg-jobseeker/5 border-b border-jobseeker/10">
         <CardTitle className="text-2xl text-jobseeker">
           {t('cv_review')}
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <div className="space-y-4">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead colSpan={2}>{t('cv_review_service')}</TableHead>
+                <TableHead className="text-jobseeker">{t('cv_review_service')}</TableHead>
+                <TableHead className="text-right text-jobseeker">{t('price')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -67,11 +52,11 @@ const CVReviewTable: React.FC<CVReviewTableProps> = ({
                 onCheckedChange={setRequestReview}
                 disabled={!isReviewEnabled}
               />
-              {!isReviewEnabled && requestReview && (
+              {!isReviewEnabled && (
                 <TableRow>
-                  <TableCell colSpan={2} className="text-amber-600 text-sm">
+                  <TableHead colSpan={2} className="text-amber-600 text-sm px-4 py-2">
                     {!hasCVUploaded ? t('upload_cv_to_enable_review') : t('complete_form_to_enable_review')}
-                  </TableCell>
+                  </TableHead>
                 </TableRow>
               )}
             </TableBody>
@@ -79,7 +64,7 @@ const CVReviewTable: React.FC<CVReviewTableProps> = ({
           
           {requestReview && (
             <LoadingButton 
-              onClick={handleSubmitBothClick}
+              onClick={onSubmitBoth}
               disabled={!isReviewEnabled || !requestReview}
               loading={loading}
               loadingText={t('processing')}
