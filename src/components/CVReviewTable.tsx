@@ -6,7 +6,6 @@ import { FileCheck } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import { useCVReview } from '@/hooks/useCVReview';
 import LoadingButton from '@/components/ui/loading-button';
-import ReviewNotes from '@/components/cv-review/ReviewNotes';
 import ReviewServiceOption from '@/components/cv-review/ReviewServiceOption';
 
 const CVReviewTable: React.FC = () => {
@@ -15,8 +14,6 @@ const CVReviewTable: React.FC = () => {
     loading, 
     requestReview, 
     setRequestReview, 
-    notes, 
-    setNotes, 
     hasUsedFreeReview, 
     handleRequestReview 
   } = useCVReview();
@@ -42,13 +39,6 @@ const CVReviewTable: React.FC = () => {
                 hasUsedFreeReview={hasUsedFreeReview}
                 onCheckedChange={setRequestReview}
               />
-              {requestReview && (
-                <TableRow>
-                  <TableCell colSpan={2}>
-                    <ReviewNotes notes={notes} setNotes={setNotes} />
-                  </TableCell>
-                </TableRow>
-              )}
             </TableBody>
           </Table>
           

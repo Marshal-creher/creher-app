@@ -9,7 +9,6 @@ export const useCVReview = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [requestReview, setRequestReview] = useState(false);
-  const [notes, setNotes] = useState('');
   const [hasUsedFreeReview, setHasUsedFreeReview] = useState(false);
 
   useEffect(() => {
@@ -84,7 +83,6 @@ export const useCVReview = () => {
         .from('cv_review_requests')
         .insert({
           job_seeker_id: jobSeekerId,
-          notes: notes,
           status: 'pending',
           is_free_review: !hasUsedFreeReview
         });
@@ -101,7 +99,6 @@ export const useCVReview = () => {
       
       // Reset form after successful submission
       setRequestReview(false);
-      setNotes('');
       setHasUsedFreeReview(true);
     } catch (error) {
       console.error('CV review request error:', error);
@@ -119,8 +116,6 @@ export const useCVReview = () => {
     loading,
     requestReview,
     setRequestReview,
-    notes,
-    setNotes,
     hasUsedFreeReview,
     handleRequestReview
   };
