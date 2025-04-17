@@ -5,7 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CalendarCheck, Clock, Check } from 'lucide-react';
-import { format, addDays, isWeekend } from "date-fns";
+import { format, addDays, addMonths, isWeekend } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useLanguage } from '@/context/LanguageContext';
@@ -87,10 +87,10 @@ const CalendarBooking: React.FC = () => {
   };
   
   const disabledDays = (date: Date) => {
-    // Disable weekends and dates before today or more than 30 days in the future
+    // Disable weekends and dates before today or more than 6 months in the future
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const maxDate = addDays(today, 30);
+    const maxDate = addMonths(today, 6); // Changed from 30 days to 6 months
     return isWeekend(date) || date < today || date > maxDate;
   };
   
