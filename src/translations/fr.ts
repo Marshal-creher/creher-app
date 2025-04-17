@@ -1,4 +1,3 @@
-
 export const frTranslations = {
   // Navbar
   'home': 'Accueil',
@@ -188,4 +187,9 @@ export const frTranslations = {
   'cv_review_error': 'Une erreur s\'est produite lors de la soumission de votre demande de révision de CV. Veuillez réessayer.',
   'no_job_seeker_profile': 'Veuillez d\'abord soumettre votre formulaire de candidature avant de demander une révision de CV.',
   'uploading_files': 'Téléchargement des fichiers...',
+  
+  // New translations for CV Review
+  'first_review_free': 'Première Révision GRATUITE',
+  'additional_review_price': 'Révision Payante',
+  'first_review_used': 'Votre première révision gratuite a été utilisée',
 };

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,45 @@ const CVReviewTable: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [requestReview, setRequestReview] = useState(false);
   const [notes, setNotes] = useState('');
+  const [hasUsedFreeReview, setHasUsedFreeReview] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already used free review
+    const checkFreeReviewStatus = async () => {
+      try {
+        const { data: latestJobSeeker, error: jobSeekerError } = await supabase
+          .from('job_seekers')
+          .select('id')
+          .order('created_at', { ascending: false })
+          .limit(1);
+        
+        if (jobSeekerError) {
+          console.error("Error fetching job seeker:", jobSeekerError);
+          return;
+        }
+        
+        if (!latestJobSeeker || latestJobSeeker.length === 0) return;
+        
+        const jobSeekerId = latestJobSeeker[0].id;
+        
+        const { data: existingReviews, error: reviewError } = await supabase
+          .from('cv_review_requests')
+          .select('id')
+          .eq('job_seeker_id', jobSeekerId);
+        
+        if (reviewError) {
+          console.error("Error checking reviews:", reviewError);
+          return;
+        }
+        
+        setHasUsedFreeReview(existingReviews.length > 0);
+      } catch (error) {
+        console.error('Error checking free review status:', error);
+      }
+    };
+
+    checkFreeReviewStatus();
+  }, []);
 
   const handleRequestReview = async () => {
     if (!requestReview) return;
@@ -50,7 +89,8 @@ const CVReviewTable: React.FC = () => {
         .insert({
           job_seeker_id: jobSeekerId,
           notes: notes,
-          status: 'pending'
+          status: 'pending',
+          is_free_review: !hasUsedFreeReview
         });
         
       if (insertError) {
@@ -65,6 +105,7 @@ const CVReviewTable: React.FC = () => {
       
       setRequestReview(false);
       setNotes('');
+      setHasUsedFreeReview(true);
     } catch (error) {
       console.error('CV review request error:', error);
       toast({
@@ -109,13 +150,21 @@ const CVReviewTable: React.FC = () => {
                         {t('request_cv_review')}
                       </label>
                       <p className="text-sm text-gray-500 mt-1">
-                        {t('cv_review_description')}
+                        {hasUsedFreeReview 
+                          ? t('first_review_used') 
+                          : t('cv_review_description')
+                        }
                       </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <p className="text-center font-medium text-green-600">{t('free')}</p>
+                  <p className="text-center font-medium text-green-600">
+                    {hasUsedFreeReview 
+                      ? t('additional_review_price') 
+                      : t('first_review_free')
+                    }
+                  </p>
                 </TableCell>
               </TableRow>
               {requestReview && (

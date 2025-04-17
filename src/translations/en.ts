@@ -1,4 +1,3 @@
-
 export const enTranslations = {
   // Navbar
   'home': 'Home',
@@ -188,4 +187,9 @@ export const enTranslations = {
   'cv_review_error': 'There was an error submitting your CV review request. Please try again.',
   'no_job_seeker_profile': 'Please submit your application form first before requesting a CV review.',
   'uploading_files': 'Uploading files...',
+  
+  // New translations for CV Review
+  'first_review_free': 'First Review FREE',
+  'additional_review_price': 'Paid Review',
+  'first_review_used': 'Your first free review has been used',
 };
