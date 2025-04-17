@@ -79,7 +79,7 @@ export const useCVReview = () => {
     try {
       console.log("Final seeker ID being used:", jobSeekerId, "is_free_review value:", !hasUsedFreeReview);
       
-      // Insert new CV review request - use insert instead of upsert to fix the issue
+      // Insert new CV review request
       console.log("Inserting new CV review request for job seeker ID:", jobSeekerId);
       const { data, error: insertError } = await supabase
         .from('cv_review_requests')
