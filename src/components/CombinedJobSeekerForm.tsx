@@ -92,6 +92,7 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Form submission started");
     
     // Create a FormData object from the form
     const formData = new FormData(e.currentTarget);
@@ -103,23 +104,33 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     formData.set('telephone', personalInfo.phone);
     
     if (cvFile) {
+      console.log("Adding CV file to formData", cvFile.name);
       formData.set('cv', cvFile);
     }
     
     if (coverLetterFile) {
+      console.log("Adding cover letter file to formData", coverLetterFile.name);
       formData.set('lettre', coverLetterFile);
     }
+    
+    // Log if CV review is requested
+    console.log("Request review status:", requestReview);
     
     // Submit the form and get the job seeker ID if successful
     const result = await handleSubmit(e, formData);
     
     if (result.success) {
+      console.log("Form submission successful, jobSeekerId:", result.jobSeekerId);
+      
       // If we're also submitting a CV review request, do that with the new job seeker ID
       if (requestReview && result.jobSeekerId) {
+        console.log("Attempting to handle CV review request");
         await handleRequestReview(result.jobSeekerId);
       }
       
       onSubmitSuccess();
+    } else {
+      console.error("Form submission failed");
     }
   };
 

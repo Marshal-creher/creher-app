@@ -13,6 +13,7 @@ export const useJobSeekerSubmit = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, customFormData?: FormData) => {
     e.preventDefault();
     setLoading(true);
+    console.log("Starting job seeker submission process");
 
     try {
       const formData = customFormData || new FormData(e.currentTarget);
@@ -23,20 +24,37 @@ export const useJobSeekerSubmit = () => {
       const cvFile = formData.get('cv') as File;
       const coverLetterFile = formData.get('lettre') as File;
       
+      console.log("Form data collected:", { firstName, lastName, email, phone });
+      console.log("CV file:", cvFile instanceof File ? cvFile.name : "No CV file");
+      console.log("Cover letter file:", coverLetterFile instanceof File ? coverLetterFile.name : "No cover letter file");
+      
       let cvUrl = null;
       let coverLetterUrl = null;
       
       try {
-        // Check if bucket exists first
-        const { data: bucketList } = await supabase.storage.listBuckets();
-        const bucketExists = bucketList?.some(bucket => bucket.name === 'job_seeker_documents');
+        // Create storage bucket if it doesn't exist
+        console.log("Checking if storage bucket exists");
+        const { data: bucketList, error: bucketListError } = await supabase.storage.listBuckets();
         
-        // Create the storage bucket if it doesn't exist
+        if (bucketListError) {
+          console.error("Error listing buckets:", bucketListError);
+        }
+        
+        const bucketExists = bucketList?.some(bucket => bucket.name === 'job_seeker_documents');
+        console.log("Bucket exists:", bucketExists);
+        
         if (!bucketExists) {
-          await supabase.storage.createBucket('job_seeker_documents', {
+          console.log("Creating storage bucket");
+          const { data: newBucket, error: createBucketError } = await supabase.storage.createBucket('job_seeker_documents', {
             public: true,
             fileSizeLimit: 10485760, // 10MB
           });
+          
+          if (createBucketError) {
+            console.error("Error creating bucket:", createBucketError);
+          } else {
+            console.log("Bucket created successfully:", newBucket);
+          }
         }
       } catch (bucketError) {
         console.error("Error checking/creating bucket:", bucketError);
@@ -44,6 +62,7 @@ export const useJobSeekerSubmit = () => {
       }
       
       if (cvFile && cvFile instanceof File && cvFile.size > 0) {
+        console.log("Uploading CV file:", cvFile.name, cvFile.size, "bytes");
         setUploadingFiles(true);
         const cvFileName = `${Date.now()}_${cvFile.name.replace(/\s+/g, '_')}`;
         
@@ -60,12 +79,14 @@ export const useJobSeekerSubmit = () => {
             throw new Error(`CV upload error: ${cvError.message}`);
           }
           
+          console.log("CV uploaded successfully:", cvData);
+          
           const { data: { publicUrl: cvPublicUrl } } = supabase.storage
             .from('job_seeker_documents')
             .getPublicUrl(cvFileName);
             
           cvUrl = cvPublicUrl;
-          console.log("CV uploaded successfully:", cvUrl);
+          console.log("CV public URL:", cvUrl);
         } catch (uploadError) {
           console.error("CV upload exception:", uploadError);
           toast({
@@ -77,6 +98,7 @@ export const useJobSeekerSubmit = () => {
       }
       
       if (coverLetterFile && coverLetterFile instanceof File && coverLetterFile.size > 0) {
+        console.log("Uploading cover letter file:", coverLetterFile.name, coverLetterFile.size, "bytes");
         const coverLetterFileName = `${Date.now()}_${coverLetterFile.name.replace(/\s+/g, '_')}`;
         
         try {
@@ -92,12 +114,14 @@ export const useJobSeekerSubmit = () => {
             throw new Error(`Cover letter upload error: ${coverError.message}`);
           }
           
+          console.log("Cover letter uploaded successfully:", coverData);
+          
           const { data: { publicUrl: coverPublicUrl } } = supabase.storage
             .from('job_seeker_documents')
             .getPublicUrl(coverLetterFileName);
             
           coverLetterUrl = coverPublicUrl;
-          console.log("Cover letter uploaded successfully:", coverLetterUrl);
+          console.log("Cover letter public URL:", coverLetterUrl);
         } catch (uploadError) {
           console.error("Cover letter upload exception:", uploadError);
           // Continue execution even if cover letter upload fails
@@ -107,6 +131,7 @@ export const useJobSeekerSubmit = () => {
       setUploadingFiles(false);
       
       // Save data to Supabase
+      console.log("Saving job seeker data to Supabase");
       const { data, error } = await supabase
         .from('job_seekers')
         .insert({
@@ -124,17 +149,22 @@ export const useJobSeekerSubmit = () => {
         throw error;
       }
       
+      console.log("Job seeker data saved successfully:", data);
+      
       // Get the newly created job seeker ID
       const jobSeekerId = data && data[0] ? data[0].id : null;
+      console.log("New job seeker ID:", jobSeekerId);
       
       // Try to submit to Netlify forms as a backup
       try {
+        console.log("Submitting to Netlify forms as backup");
         const netlifyFormData = new FormData(e.currentTarget);
         await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams(netlifyFormData as any).toString()
         });
+        console.log("Netlify form submission successful");
       } catch (netlifyError) {
         console.warn("Netlify form submission failed, but Supabase succeeded:", netlifyError);
         // Continue since we already saved to Supabase

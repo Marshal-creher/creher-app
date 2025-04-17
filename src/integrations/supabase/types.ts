@@ -122,39 +122,6 @@ export type Database = {
         }
         Relationships: []
       }
-      resume_review_bookings: {
-        Row: {
-          booking_date: string
-          booking_time: string
-          created_at: string
-          email: string
-          first_name: string
-          id: string
-          last_name: string
-          user_id: string | null
-        }
-        Insert: {
-          booking_date: string
-          booking_time: string
-          created_at?: string
-          email: string
-          first_name: string
-          id?: string
-          last_name: string
-          user_id?: string | null
-        }
-        Update: {
-          booking_date?: string
-          booking_time?: string
-          created_at?: string
-          email?: string
-          first_name?: string
-          id?: string
-          last_name?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
     }
     Views: {
       [_ in never]: never

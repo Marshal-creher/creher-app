@@ -25,9 +25,13 @@ export const useCVReview = () => {
           return;
         }
         
-        if (!latestJobSeeker || latestJobSeeker.length === 0) return;
+        if (!latestJobSeeker || latestJobSeeker.length === 0) {
+          console.log("No job seekers found");
+          return;
+        }
         
         const jobSeekerId = latestJobSeeker[0].id;
+        console.log("Latest job seeker ID:", jobSeekerId);
         
         const { data: existingReviews, error: reviewError } = await supabase
           .from('cv_review_requests')
@@ -39,9 +43,12 @@ export const useCVReview = () => {
           return;
         }
         
+        console.log("Existing reviews:", existingReviews);
+        
         // Check if any previous reviews exist, especially free reviews
         const hasFreeReview = existingReviews?.some(review => review.is_free_review);
         setHasUsedFreeReview(hasFreeReview || false);
+        console.log("Has used free review:", hasFreeReview);
       } catch (error) {
         console.error('Error checking free review status:', error);
       }
@@ -51,8 +58,12 @@ export const useCVReview = () => {
   }, []);
 
   const handleRequestReview = async (jobSeekerId?: string) => {
-    if (!requestReview) return;
+    if (!requestReview) {
+      console.log("CV review not requested, skipping");
+      return false;
+    }
     
+    console.log("Handling CV review request for job seeker ID:", jobSeekerId);
     setLoading(true);
     try {
       // If no job seeker ID is provided, get the most recent one
@@ -60,6 +71,7 @@ export const useCVReview = () => {
       
       if (!seekerId) {
         // Get the most recent job seeker entry
+        console.log("No job seeker ID provided, getting the most recent one");
         const { data: latestJobSeeker, error: jobSeekerError } = await supabase
           .from('job_seekers')
           .select('id')
@@ -72,6 +84,7 @@ export const useCVReview = () => {
         }
         
         if (!latestJobSeeker || latestJobSeeker.length === 0) {
+          console.error("No job seeker profile found");
           toast({
             title: t('error'),
             description: t('no_job_seeker_profile'),
@@ -81,21 +94,26 @@ export const useCVReview = () => {
         }
         
         seekerId = latestJobSeeker[0].id;
+        console.log("Using latest job seeker ID:", seekerId);
       }
       
       // Insert CV review request
-      const { error: insertError } = await supabase
+      console.log("Inserting CV review request for job seeker ID:", seekerId);
+      const { data, error: insertError } = await supabase
         .from('cv_review_requests')
         .insert({
           job_seeker_id: seekerId,
           status: 'pending',
           is_free_review: !hasUsedFreeReview
-        });
+        })
+        .select();
         
       if (insertError) {
         console.error("Error inserting CV review request:", insertError);
         throw insertError;
       }
+      
+      console.log("CV review request created:", data);
       
       toast({
         title: t('cv_review_requested'),
