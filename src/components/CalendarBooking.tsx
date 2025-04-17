@@ -53,7 +53,7 @@ const CalendarBooking: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // Save booking to Supabase
+      // Save booking to Supabase using the REST API directly
       const { error } = await supabase
         .from('resume_review_bookings')
         .insert({
