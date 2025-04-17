@@ -38,11 +38,11 @@ const JobSeeker: React.FC = () => {
               </TabsTrigger>
               <TabsTrigger value="cv-help" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
-                {t('free_cv_help') || "Free CV Help"}
+                {t('free_cv_help')}
               </TabsTrigger>
               <TabsTrigger value="booking" className="flex items-center gap-2" disabled={!formCompleted}>
                 <Calendar className="h-4 w-4" />
-                {t('book_session') || "Book a Session"}
+                {t('book_session')}
               </TabsTrigger>
             </TabsList>
             
@@ -59,12 +59,17 @@ const JobSeeker: React.FC = () => {
                 <CalendarBooking />
               ) : (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 text-center">
-                  <p className="text-amber-800 mb-4">{t('complete_form_first') || "Please complete the application form first"}</p>
+                  <p className="text-amber-800 mb-4">{t('complete_form_first')}</p>
                   <button 
                     className="text-jobseeker underline"
-                    onClick={() => document.querySelector('[data-value="application"]')?.click()}
+                    onClick={() => {
+                      const element = document.querySelector('[data-value="application"]');
+                      if (element) {
+                        (element as HTMLElement).click();
+                      }
+                    }}
                   >
-                    {t('go_to_form') || "Go to the application form"}
+                    {t('go_to_form')}
                   </button>
                 </div>
               )}

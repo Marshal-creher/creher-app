@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type Language = 'en' | 'fr';
@@ -184,6 +185,47 @@ const translations = {
     'send': 'Send',
     'thanks_for_submission': 'Thank you for your submission',
     'error_occurred': 'An error occurred. Please try again.',
+    
+    // CV Help and Calendar Booking
+    'free_cv_help': 'Free CV Help',
+    'book_session': 'Book a Session',
+    'complete_form_first': 'Please complete the application form first',
+    'go_to_form': 'Go to the application form',
+    'resume_writing_tips': 'Resume Writing Tips',
+    'need_more_help': 'Need More Help?',
+    'cv_help_description': 'Our experts can review your CV and provide personalized feedback to help you stand out to employers.',
+    'what_you_get': 'What you\'ll get:',
+    'expert_review': 'Expert resume review',
+    'personalized_feedback': 'Personalized feedback',
+    'formatting_suggestions': 'Formatting suggestions',
+    'career_advice_personal': 'One-on-one career advice',
+    'book_cv_review': 'Book a CV Review Session',
+    'book_cv_session': 'Book a CV Review Session',
+    'book_cv_session_description': 'Select a date and time for your free CV review session with one of our experts.',
+    'select_date': 'Select a Date',
+    'select_time': 'Select a Time',
+    'please_select_date_first': 'Please select a date first',
+    'confirm_booking': 'Confirm Booking',
+    'booking_confirmed': 'Booking Confirmed',
+    'booking_successful': 'Booking Successful!',
+    'booking_confirmation_message': 'Your session has been successfully scheduled. You\'ll receive a confirmation email shortly.',
+    'date_and_time': 'Date & Time',
+    'book_another_session': 'Book Another Session',
+    'booking_confirmation_text': 'You\'re about to book a CV review session for the following date and time:',
+    'cancel': 'Cancel',
+    'confirm': 'Confirm',
+    'fill_all_fields': 'Please fill all required fields',
+    'booking_error': 'There was an error saving your booking. Please try again.',
+    
+    // CV Tips
+    'tip_tailor_resume': 'Tailor your resume for each job application',
+    'tip_bullet_points': 'Use bullet points to highlight achievements',
+    'tip_measurable_results': 'Include measurable results and outcomes',
+    'tip_resume_length': 'Keep your resume to 1-2 pages maximum',
+    'tip_action_verbs': 'Use action verbs to describe your experience',
+    'tip_keywords': 'Include relevant keywords from the job description',
+    'tip_professional_summary': 'Start with a concise professional summary',
+    'tip_proofreading': 'Proofread carefully for errors and typos',
   },
   fr: {
     // Navbar
@@ -360,6 +402,47 @@ const translations = {
     'send': 'Envoyer',
     'thanks_for_submission': 'Merci pour votre envoi',
     'error_occurred': 'Une erreur s\'est produite. Veuillez réessayer.',
+    
+    // CV Help and Calendar Booking
+    'free_cv_help': 'Aide CV Gratuite',
+    'book_session': 'Réserver une Session',
+    'complete_form_first': 'Veuillez d\'abord remplir le formulaire de candidature',
+    'go_to_form': 'Aller au formulaire de candidature',
+    'resume_writing_tips': 'Conseils pour Rédiger un CV',
+    'need_more_help': 'Besoin de Plus d\'Aide?',
+    'cv_help_description': 'Nos experts peuvent examiner votre CV et vous fournir des commentaires personnalisés pour vous aider à vous démarquer auprès des employeurs.',
+    'what_you_get': 'Ce que vous obtiendrez:',
+    'expert_review': 'Examen expert de votre CV',
+    'personalized_feedback': 'Commentaires personnalisés',
+    'formatting_suggestions': 'Suggestions de mise en forme',
+    'career_advice_personal': 'Conseils de carrière individualisés',
+    'book_cv_review': 'Réserver une Session d\'Examen de CV',
+    'book_cv_session': 'Réserver une Session d\'Examen de CV',
+    'book_cv_session_description': 'Sélectionnez une date et une heure pour votre session gratuite d\'examen de CV avec l\'un de nos experts.',
+    'select_date': 'Sélectionner une Date',
+    'select_time': 'Sélectionner une Heure',
+    'please_select_date_first': 'Veuillez d\'abord sélectionner une date',
+    'confirm_booking': 'Confirmer la Réservation',
+    'booking_confirmed': 'Réservation Confirmée',
+    'booking_successful': 'Réservation Réussie!',
+    'booking_confirmation_message': 'Votre session a été programmée avec succès. Vous recevrez bientôt un e-mail de confirmation.',
+    'date_and_time': 'Date et Heure',
+    'book_another_session': 'Réserver une Autre Session',
+    'booking_confirmation_text': 'Vous êtes sur le point de réserver une session d\'examen de CV pour la date et l\'heure suivantes:',
+    'cancel': 'Annuler',
+    'confirm': 'Confirmer',
+    'fill_all_fields': 'Veuillez remplir tous les champs requis',
+    'booking_error': 'Une erreur s\'est produite lors de l\'enregistrement de votre réservation. Veuillez réessayer.',
+    
+    // CV Tips
+    'tip_tailor_resume': 'Adaptez votre CV à chaque candidature',
+    'tip_bullet_points': 'Utilisez des puces pour mettre en évidence vos réalisations',
+    'tip_measurable_results': 'Incluez des résultats et des accomplissements mesurables',
+    'tip_resume_length': 'Limitez votre CV à 1-2 pages maximum',
+    'tip_action_verbs': 'Utilisez des verbes d\'action pour décrire votre expérience',
+    'tip_keywords': 'Incluez des mots-clés pertinents de l\'offre d\'emploi',
+    'tip_professional_summary': 'Commencez par un résumé professionnel concis',
+    'tip_proofreading': 'Relisez attentivement pour éviter les erreurs et les fautes de frappe',
   }
 };
 
