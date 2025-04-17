@@ -179,25 +179,10 @@ export const useJobSeekerSubmit = () => {
         } else {
           console.log("Bucket created successfully");
           
-          // Set bucket policy to public for all objects
-          const { error: policyError } = await supabase
-            .storage
-            .from('job_seeker_documents')
-            .createPolicy('allow-public-select', {
-              name: 'allow-public-select',
-              definition: {
-                match: { prefix: '', owner: '*' },
-                check: 'true',
-                action: 'select'
-              }
-            });
-            
-          if (policyError) {
-            console.error("Error setting bucket policy:", policyError);
-            return { error: policyError };
-          }
-          
-          console.log("Bucket policy set to public successfully");
+          // Removed the createPolicy method call since it's not available
+          // Instead, we'll use SQL to make the bucket public in the first place
+          // The bucket is already created with public: true above
+          console.log("Bucket is set to public");
         }
       } else {
         console.log("Bucket job_seeker_documents already exists");
