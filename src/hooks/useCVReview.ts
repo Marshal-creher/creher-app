@@ -77,7 +77,23 @@ export const useCVReview = () => {
     setLoading(true);
     
     try {
-      console.log("Final seeker ID being used:", jobSeekerId, "is_free_review value:", !hasUsedFreeReview);
+      // Fetch the latest status of free review usage
+      const { data: existingReviews, error: checkError } = await supabase
+        .from('cv_review_requests')
+        .select('id, is_free_review')
+        .eq('job_seeker_id', jobSeekerId);
+      
+      if (checkError) {
+        console.error("Error checking existing reviews:", checkError);
+      }
+      
+      // Determine if this should be a free review
+      const hasFreeReview = existingReviews?.some(review => review.is_free_review) || false;
+      const shouldBeFreeReview = !hasFreeReview;
+      
+      console.log("Final seeker ID being used:", jobSeekerId);
+      console.log("Has already used free review:", hasFreeReview);
+      console.log("This request should be a free review:", shouldBeFreeReview);
       
       // Insert new CV review request
       console.log("Inserting new CV review request for job seeker ID:", jobSeekerId);
@@ -86,7 +102,7 @@ export const useCVReview = () => {
         .insert({
           job_seeker_id: jobSeekerId,
           status: 'pending',
-          is_free_review: !hasUsedFreeReview
+          is_free_review: shouldBeFreeReview
         })
         .select();
         
@@ -102,7 +118,7 @@ export const useCVReview = () => {
         description: t('cv_review_confirmation'),
       });
       
-      // Reset form after successful submission
+      // Update the state to reflect the new review has been created
       setRequestReview(false);
       setHasUsedFreeReview(true);
       return true;

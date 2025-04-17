@@ -11,7 +11,7 @@ const JobSeeker: React.FC = () => {
   const { t } = useLanguage();
   const [formValid, setFormValid] = useState(false);
   const [cvUploaded, setCvUploaded] = useState(false);
-  const { requestReview, setRequestReview } = useCVReview();
+  const { requestReview, setRequestReview, hasUsedFreeReview } = useCVReview();
   
   return (
     <Layout>
@@ -39,9 +39,13 @@ const JobSeeker: React.FC = () => {
               <CVReviewTable 
                 isFormValid={formValid}
                 hasCVUploaded={cvUploaded}
+                hasUsedFreeReview={hasUsedFreeReview}
                 onSubmitBoth={() => {
                   console.log("Submit both button clicked");
+                  // Set request review to true BEFORE clicking the form submit button
                   setRequestReview(true);
+                  console.log("Request review set to true:", true);
+                  
                   const formSubmitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement | null;
                   if (formSubmitButton) {
                     console.log("Found form submit button, clicking it");

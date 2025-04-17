@@ -11,20 +11,21 @@ import ReviewServiceOption from '@/components/cv-review/ReviewServiceOption';
 interface CVReviewTableProps {
   isFormValid: boolean;
   hasCVUploaded: boolean;
+  hasUsedFreeReview?: boolean;
   onSubmitBoth: () => void;
 }
 
 const CVReviewTable: React.FC<CVReviewTableProps> = ({ 
   isFormValid, 
   hasCVUploaded,
+  hasUsedFreeReview = false,
   onSubmitBoth
 }) => {
   const { t } = useLanguage();
   const { 
     loading, 
     requestReview, 
-    setRequestReview, 
-    hasUsedFreeReview
+    setRequestReview
   } = useCVReview();
 
   const isReviewEnabled = isFormValid && hasCVUploaded;

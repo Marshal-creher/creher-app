@@ -86,6 +86,11 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       phone: ''
     });
     setCvFile(null);
+    
+    // Reset review request if needed
+    if (onRequestReviewChange) {
+      onRequestReviewChange(false);
+    }
   };
   
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -106,7 +111,7 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       formData.set('cv', cvFile);
     }
     
-    // Log if CV review is requested
+    // Log if CV review is requested - Add this logging to see the state
     console.log("Request review status:", requestReview);
     
     // Submit the form and get the job seeker ID if successful
@@ -115,10 +120,12 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     if (result.success && result.jobSeekerId) {
       console.log("Form submission successful, jobSeekerId:", result.jobSeekerId);
       
-      // If we're also submitting a CV review request, do that with the new job seeker ID
+      // If CV review is requested, handle that with the new job seeker ID
       if (requestReview) {
         console.log("Attempting to handle CV review request with ID:", result.jobSeekerId);
         await handleRequestReview(result.jobSeekerId);
+      } else {
+        console.log("CV review not requested, skipping request");
       }
       
       onSubmitSuccess();
