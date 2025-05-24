@@ -21,9 +21,10 @@ export const useJobSeekerSubmit = () => {
       const lastName = formData.get('nom') as string;
       const email = formData.get('email') as string;
       const phone = formData.get('telephone') as string;
+      const desiredPosition = formData.get('desired_position') as string;
       const cvFile = formData.get('cv') as File;
       
-      console.log("Form data collected:", { firstName, lastName, email, phone });
+      console.log("Form data collected:", { firstName, lastName, email, phone, desiredPosition });
       console.log("CV file:", cvFile instanceof File ? cvFile.name : "No CV file");
       
       let cvUrl = null;
@@ -92,6 +93,7 @@ export const useJobSeekerSubmit = () => {
           last_name: lastName,
           email: email,
           phone: phone,
+          desired_position: desiredPosition,
           cv_url: cvUrl
         })
         .select();
@@ -116,6 +118,7 @@ export const useJobSeekerSubmit = () => {
         netlifyFormData.append('nom', lastName);
         netlifyFormData.append('email', email);
         netlifyFormData.append('telephone', phone || '');
+        netlifyFormData.append('desired_position', desiredPosition || '');
         
         await fetch('/', {
           method: 'POST',

@@ -52,6 +52,7 @@ export type Database = {
           cover_letter_url: string | null
           created_at: string
           cv_url: string | null
+          desired_position: string | null
           email: string
           first_name: string
           id: string
@@ -62,6 +63,7 @@ export type Database = {
           cover_letter_url?: string | null
           created_at?: string
           cv_url?: string | null
+          desired_position?: string | null
           email: string
           first_name: string
           id?: string
@@ -72,6 +74,7 @@ export type Database = {
           cover_letter_url?: string | null
           created_at?: string
           cv_url?: string | null
+          desired_position?: string | null
           email?: string
           first_name?: string
           id?: string
