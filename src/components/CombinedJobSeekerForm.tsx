@@ -46,7 +46,8 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     firstName: '',
     lastName: '',
     email: '',
-    phone: ''
+    phone: '',
+    desiredPosition: ''
   });
   
   // Document state
@@ -61,7 +62,8 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       personalInfo.firstName.trim() !== '' && 
       personalInfo.lastName.trim() !== '' && 
       personalInfo.email.trim() !== '' && 
-      personalInfo.phone.trim() !== '';
+      personalInfo.phone.trim() !== '' &&
+      personalInfo.desiredPosition.trim() !== '';
     
     setIsFormValid(valid);
     if (onFormValidChange) {
@@ -90,7 +92,8 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
       firstName: '',
       lastName: '',
       email: '',
-      phone: ''
+      phone: '',
+      desiredPosition: ''
     });
     setCvFile(null);
     
@@ -116,6 +119,7 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     formData.set('nom', personalInfo.lastName);
     formData.set('email', personalInfo.email);
     formData.set('telephone', personalInfo.phone);
+    formData.set('desired_position', personalInfo.desiredPosition);
     
     if (cvFile) {
       console.log("Adding CV file to formData", cvFile.name);

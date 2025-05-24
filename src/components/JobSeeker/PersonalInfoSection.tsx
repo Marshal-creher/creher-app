@@ -3,7 +3,7 @@ import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from '@/hooks/useLanguageContext';
-import { UserRound, Mail, Phone } from 'lucide-react';
+import { UserRound, Mail, Phone, Briefcase } from 'lucide-react';
 
 interface PersonalInfoSectionProps {
   formData: {
@@ -11,6 +11,7 @@ interface PersonalInfoSectionProps {
     lastName: string;
     email: string;
     phone: string;
+    desiredPosition: string;
   };
   onChange: (field: string, value: string) => void;
 }
@@ -84,6 +85,23 @@ const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({ formData, onC
           placeholder={t('phone')}
           value={formData.phone}
           onChange={(e) => onChange('phone', e.target.value)}
+          className="border-gray-300 focus:border-jobseeker focus:ring-jobseeker"
+        />
+      </div>
+
+      <div className="space-y-2 md:col-span-2">
+        <Label htmlFor="desired_position" className="flex items-center gap-2 text-gray-700">
+          <Briefcase size={16} className="text-jobseeker" />
+          {t('desired_position')}
+        </Label>
+        <Input 
+          id="desired_position"
+          name="desired_position"
+          type="text"
+          required
+          placeholder={t('desired_position')}
+          value={formData.desiredPosition}
+          onChange={(e) => onChange('desiredPosition', e.target.value)}
           className="border-gray-300 focus:border-jobseeker focus:ring-jobseeker"
         />
       </div>

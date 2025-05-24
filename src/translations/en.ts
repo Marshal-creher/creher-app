@@ -1,3 +1,4 @@
+
 export const enTranslations = {
   // Navbar
   'home': 'Home',
@@ -67,6 +68,7 @@ export const enTranslations = {
   'last_name': 'Last Name',
   'email': 'Email Address',
   'phone': 'Phone Number',
+  'desired_position': 'Desired Position',
   'company_name': 'Company Name',
   'company_size': 'Company Size',
   'industry': 'Industry',

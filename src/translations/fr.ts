@@ -1,3 +1,4 @@
+
 export const frTranslations = {
   // Navbar
   'home': 'Accueil',
@@ -67,6 +68,7 @@ export const frTranslations = {
   'last_name': 'Nom',
   'email': 'Adresse Email',
   'phone': 'Numéro de Téléphone',
+  'desired_position': 'Poste souhaité',
   'company_name': 'Nom de l\'Entreprise',
   'company_size': 'Taille de l\'Entreprise',
   'industry': 'Secteur d\'Activité',
