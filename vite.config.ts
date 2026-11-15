@@ -7,7 +7,18 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 5173,
+    proxy: {
+      // Forward all /api and /uploads requests to the INFINITAS HRM backend
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/uploads': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [
     react(),
@@ -17,6 +28,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // @crm/ resolves to src/crm/ — used by all merged CRM files
+      "@crm": path.resolve(__dirname, "./src/crm"),
     },
   },
 }));
