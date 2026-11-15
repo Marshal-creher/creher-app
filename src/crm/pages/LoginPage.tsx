@@ -91,7 +91,7 @@ export function LoginPage() {
                   </div>
                   <input
                     type="email"
-                    placeholder="admin@infinitas.ma"
+                    placeholder="nom@entreprise.com"
                     autoComplete="email"
                     {...register('email')}
                     className={`block w-full rounded-lg border pl-10 pr-4 py-2.5 text-sm text-gray-900 placeholder-gray-400
