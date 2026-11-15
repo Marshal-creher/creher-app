@@ -198,4 +198,11 @@ export const frTranslations = {
   'additional_review_price': 'Révision Payante',
   'first_review_used': 'Votre première révision gratuite a été utilisée',
   'personal_information': 'Informations Personnelles',
+
+  // Form submission errors
+  'cv_too_large': 'Votre CV est trop volumineux. La taille maximale est de 4 Mo.',
+  'cv_invalid': 'Ce fichier n\'est pas un CV lisible. Veuillez envoyer un fichier PDF, DOC ou DOCX.',
+
+  // Discreet footer link to the HRM
+  'admin_client_access': 'Accès Admin Client',
 };

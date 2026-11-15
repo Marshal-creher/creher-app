@@ -58,6 +58,10 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-200 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm">
             © {new Date().getFullYear()} CREHER. {t('all_rights_reserved')}
+            {/* Deliberately discreet way into the HRM, for people who know where to look. */}
+            <Link to="/crm" className="ml-3 text-xs text-gray-400 hover:text-gray-600">
+              {t('admin_client_access')}
+            </Link>
           </p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-gray-600">

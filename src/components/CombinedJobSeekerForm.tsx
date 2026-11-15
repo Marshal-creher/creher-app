@@ -120,6 +120,9 @@ const CombinedJobSeekerForm: React.FC<CombinedJobSeekerFormProps> = ({
     formData.set('email', personalInfo.email);
     formData.set('telephone', personalInfo.phone);
     formData.set('desired_position', personalInfo.desiredPosition);
+    formData.set('open_to_remote', openToRemote ? 'yes' : 'no');
+    formData.set('open_to_relocation', openToRelocation ? 'yes' : 'no');
+    formData.set('cv_review', shouldRequestReview ? 'yes' : 'no');
     
     if (cvFile) {
       console.log("Adding CV file to formData", cvFile.name);

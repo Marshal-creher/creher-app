@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { BriefcaseBusiness, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from '@/hooks/useLanguageContext';
-import { supabase } from "@/integrations/supabase/client";
+import { submitForm } from '@/lib/submitForm';
 
 const companySize = [
   "1-10 employees",
@@ -52,7 +52,7 @@ const consultingServices = [
 
 const RecruiterForm: React.FC = () => {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -87,22 +87,21 @@ const RecruiterForm: React.FC = () => {
     setLoading(true);
     
     try {
-      // Save the recruiter data to Supabase
-      const { error } = await supabase
-        .from('recruiters')
-        .insert({
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone: phone,
-          company_name: companyName,
-          company_size: size,
-          industry: industry,
-          consulting_needs: selectedServices,
-          additional_info: consultingNeeds
-        });
+      const data = new FormData();
+      data.set('prenom', firstName);
+      data.set('nom', lastName);
+      data.set('email', email);
+      data.set('telephone', phone);
+      data.set('company_name', companyName);
+      data.set('company_size', size);
+      data.set('industry', industry);
+      selectedServices.forEach((service) => data.append('services', service));
+      data.set('needs', consultingNeeds);
+      data.set('lang', language);
+
+      const result = await submitForm('recruiter', data);
         
-      if (error) throw error;
+      if (!result.ok) throw new Error(result.error);
       
       toast({
         title: t('request_submitted'),

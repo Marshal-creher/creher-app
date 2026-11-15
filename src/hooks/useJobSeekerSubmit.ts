@@ -2,149 +2,57 @@
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from '@/hooks/useLanguageContext';
-import { supabase } from "@/integrations/supabase/client";
+import { MAX_CV_BYTES, submitForm } from '@/lib/submitForm';
 
 export const useJobSeekerSubmit = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, customFormData?: FormData) => {
     e.preventDefault();
+
+    const formData = customFormData || new FormData(e.currentTarget);
+    const cvFile = formData.get('cv');
+    const hasCv = cvFile instanceof File && cvFile.size > 0;
+
+    if (hasCv && cvFile.size > MAX_CV_BYTES) {
+      toast({
+        title: t('error'),
+        description: t('cv_too_large'),
+        variant: "destructive",
+      });
+      return { success: false, jobSeekerId: null };
+    }
+
     setLoading(true);
-    console.log("Starting job seeker submission process");
+    setUploadingFiles(hasCv);
 
     try {
-      const formData = customFormData || new FormData(e.currentTarget);
-      const firstName = formData.get('prenom') as string;
-      const lastName = formData.get('nom') as string;
-      const email = formData.get('email') as string;
-      const phone = formData.get('telephone') as string;
-      const desiredPosition = formData.get('desired_position') as string;
-      const cvFile = formData.get('cv') as File;
-      
-      console.log("Form data collected:", { firstName, lastName, email, phone, desiredPosition });
-      console.log("CV file:", cvFile instanceof File ? cvFile.name : "No CV file");
-      
-      let cvUrl = null;
-      
-      if (cvFile && cvFile instanceof File && cvFile.size > 0) {
-        console.log("Uploading CV file:", cvFile.name, cvFile.size, "bytes");
-        setUploadingFiles(true);
-        const cvFileName = `${Date.now()}_${cvFile.name.replace(/\s+/g, '_')}`;
-        
-        try {
-          // Get file extension and set content type
-          const fileExt = cvFile.name.split('.').pop()?.toLowerCase() || '';
-          const contentType = 
-            fileExt === 'pdf' ? 'application/pdf' : 
-            fileExt === 'doc' ? 'application/msword' :
-            fileExt === 'docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' :
-            'application/octet-stream';
-          
-          console.log(`File extension: ${fileExt}, Content-Type: ${contentType}`);
-          
-          // Upload file to Supabase storage
-          const { data: cvData, error: cvError } = await supabase.storage
-            .from('job_seeker_documents')
-            .upload(cvFileName, cvFile, {
-              cacheControl: '3600',
-              upsert: true,
-              contentType: contentType
-            });
-            
-          if (cvError) {
-            console.error("CV upload error:", cvError);
-            
-            toast({
-              title: t('warning'),
-              description: t('cv_upload_error'),
-              variant: "destructive",
-            });
-          } else {
-            console.log("CV uploaded successfully:", cvData);
-            
-            const { data: { publicUrl: cvPublicUrl } } = supabase.storage
-              .from('job_seeker_documents')
-              .getPublicUrl(cvFileName);
-              
-            cvUrl = cvPublicUrl;
-            console.log("CV public URL:", cvUrl);
-          }
-        } catch (uploadError) {
-          console.error("CV upload exception:", uploadError);
-          toast({
-            title: t('warning'),
-            description: t('cv_upload_error'),
-            variant: "destructive",
-          });
-        }
-      }
-      
-      setUploadingFiles(false);
-      
-      // Save data to Supabase
-      console.log("Saving job seeker data to Supabase");
-      const { data, error } = await supabase
-        .from('job_seekers')
-        .insert({
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          phone: phone,
-          desired_position: desiredPosition,
-          cv_url: cvUrl
-        })
-        .select();
+      formData.set('lang', language);
+      const result = await submitForm('candidate', formData);
 
-      if (error) {
-        console.error("Database insertion error:", error);
-        throw error;
-      }
-      
-      console.log("Job seeker data saved successfully:", data);
-      
-      // Get the newly created job seeker ID
-      const jobSeekerId = data && data[0] ? data[0].id : null;
-      console.log("New job seeker ID:", jobSeekerId);
-      
-      // Try to submit to Netlify forms as a backup
-      try {
-        console.log("Submitting to Netlify forms as backup");
-        const netlifyFormData = new FormData();
-        netlifyFormData.append('form-name', 'contact');
-        netlifyFormData.append('prenom', firstName);
-        netlifyFormData.append('nom', lastName);
-        netlifyFormData.append('email', email);
-        netlifyFormData.append('telephone', phone || '');
-        netlifyFormData.append('desired_position', desiredPosition || '');
-        
-        await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(netlifyFormData as any).toString()
+      if (!result.ok) {
+        console.error('Form submission error:', result.error);
+        const description =
+          result.error === 'cv_too_large' ? t('cv_too_large') :
+          result.error === 'cv_invalid' ? t('cv_invalid') :
+          t('submission_error');
+        toast({
+          title: t('error'),
+          description,
+          variant: "destructive",
         });
-        console.log("Netlify form submission successful");
-      } catch (netlifyError) {
-        console.warn("Netlify form submission failed, but Supabase succeeded:", netlifyError);
-        // Continue since we already saved to Supabase
+        return { success: false, jobSeekerId: null };
       }
-      
+
       toast({
         title: t('profile_submitted'),
         description: t('profile_success'),
       });
-      
-      return { success: true, jobSeekerId };
-    } catch (error) {
-      console.error('Form submission error:', error);
-      toast({
-        title: t('error'),
-        description: t('submission_error'),
-        variant: "destructive",
-      });
-      return { success: false, jobSeekerId: null };
+
+      return { success: true, jobSeekerId: result.id };
     } finally {
       setLoading(false);
       setUploadingFiles(false);

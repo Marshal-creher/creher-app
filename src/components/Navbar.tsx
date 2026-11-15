@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { BriefcaseBusiness, UserRound, LayoutGrid } from 'lucide-react';
+import { BriefcaseBusiness, UserRound } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguageContext';
 import LanguageToggle from './LanguageToggle';
 
@@ -39,12 +39,6 @@ const Navbar: React.FC = () => {
               {t('for_recruiters')}
             </Button>
           </Link>
-          <Link to="/crm">
-            <Button variant="ghost" className="flex items-center gap-1 text-purple-700 hover:text-purple-900 hover:bg-purple-50">
-              <LayoutGrid size={18} />
-              HRM
-            </Button>
-          </Link>
         </div>
         <div className="flex items-center space-x-2">
           <LanguageToggle />
@@ -53,12 +47,6 @@ const Navbar: React.FC = () => {
           </Link>
           <Link to="/recruiter">
             <Button className="bg-secondary hover:bg-recruiter-dark text-white">{t('hire_talent')}</Button>
-          </Link>
-          <Link to="/crm" className="hidden sm:block">
-            <Button variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50 flex items-center gap-1">
-              <LayoutGrid size={16} />
-              HRM
-            </Button>
           </Link>
         </div>
       </div>

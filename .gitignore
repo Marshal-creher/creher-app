@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Netlify CLI local state
+.netlify
+
 # Environment — NEVER commit
 .env
 .env.production

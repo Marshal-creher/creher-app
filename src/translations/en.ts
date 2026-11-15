@@ -198,4 +198,11 @@ export const enTranslations = {
   'additional_review_price': 'Paid Review',
   'first_review_used': 'Your first free review has been used',
   'personal_information': 'Personal Information',
+
+  // Form submission errors
+  'cv_too_large': 'Your CV is too large. The maximum size is 4 MB.',
+  'cv_invalid': 'This file could not be read as a CV. Please upload a PDF, DOC or DOCX file.',
+
+  // Discreet footer link to the HRM
+  'admin_client_access': 'Admin Client Access',
 };
