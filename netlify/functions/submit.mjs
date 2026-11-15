@@ -2,7 +2,7 @@
 // requests) and keeps them in Netlify Blobs until the owner's Mac collects them
 // through the token-protected `inbox` function.
 import { getStore } from "@netlify/blobs";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 // Netlify buffers request bodies up to 6 MB, which is about 4.5 MB once a binary
 // upload has been base64-encoded, so the CV limit has to stay below that.
@@ -92,9 +92,13 @@ const buildCandidate = async (form) => {
   if (!CV_EXTENSIONS.includes(ext)) return { error: "cv_invalid" };
 
   const buffer = await cv.arrayBuffer();
-  if (!hasCvSignature(ext, new Uint8Array(buffer))) return { error: "cv_invalid" };
+  const bytes = new Uint8Array(buffer);
+  if (!hasCvSignature(ext, bytes)) return { error: "cv_invalid" };
 
-  return { fields, file: { buffer, info: { name, ext, size: buffer.byteLength } } };
+  // The Mac deletes the online copy once it holds the CV, so it needs a way to
+  // be sure the download is complete first.
+  const sha256 = createHash("sha256").update(bytes).digest("hex");
+  return { fields, file: { buffer, info: { name, ext, size: buffer.byteLength, sha256 } } };
 };
 
 const buildRecruiter = (form) => {

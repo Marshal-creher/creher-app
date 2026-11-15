@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Downloads new website submissions (candidate applications with their CV and
-// recruiter requests) from the CREHER site's private inbox to this Mac.
+// recruiter requests) from the CREHER site's private inbox to this Mac, then
+// deletes the online copy: once a submission is here, this Mac holds the only one.
 // A LaunchAgent runs it every few minutes; it is safe to run by hand at any time.
 //
 // Settings live outside the repository, in
@@ -8,6 +9,7 @@
 //   { "baseUrl": "https://…", "token": "…", "outDir": "/Users/…/CREHER-Candidatures" }
 // next to state.json, which remembers what has already been downloaded.
 import { execFile } from "node:child_process";
+import { createHash } from "node:crypto";
 import { appendFile, mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
@@ -85,9 +87,12 @@ const cell = (value) => {
   return `"${text.replace(/"/g, '""')}"`;
 };
 
+// Writes are flushed to disk (`flush: true`) because the online copy is deleted
+// right after: the data must really be on this Mac by then, not in a buffer.
 const appendRow = async (file, header, row) => {
   const headerLine = (await exists(file)) ? "" : `${BOM}${header.map(cell).join(SEPARATOR)}\r\n`;
-  await appendFile(file, `${headerLine}${row.map(cell).join(SEPARATOR)}\r\n`, "utf8");
+  const line = `${headerLine}${row.map(cell).join(SEPARATOR)}\r\n`;
+  await appendFile(file, line, { encoding: "utf8", flush: true });
 };
 
 const freePath = async (dir, base, ext) => {
@@ -121,8 +126,9 @@ const config = await readJson(path.join(APP_DIR, "config.json"));
 const state = await readJson(STATE_PATH, { done: [] });
 const done = new Set(state.done);
 
-const request = async (query) => {
+const request = async (query, method = "GET") => {
   const response = await fetch(`${config.baseUrl}/.netlify/functions/inbox${query}`, {
+    method,
     headers: { authorization: `Bearer ${config.token}` },
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
@@ -132,8 +138,20 @@ const request = async (query) => {
 
 const saveState = async () => {
   const temporary = `${STATE_PATH}.tmp`;
-  await writeFile(temporary, JSON.stringify({ done: [...done].sort() }, null, 1));
+  const content = JSON.stringify({ done: [...done].sort() }, null, 1);
+  await writeFile(temporary, content, { flush: true });
   await rename(temporary, STATE_PATH);
+};
+
+// Called only for submissions already saved here. Failing is not fatal: the id
+// stays in `done`, so the next run finds it still online and asks again.
+const removeOnline = async (id) => {
+  try {
+    await request(`?id=${id}`, "DELETE");
+    log(`deleted the online copy of ${id}`);
+  } catch (error) {
+    log(`could not delete the online copy of ${id} yet: ${error.message}`);
+  }
 };
 
 const saveCandidate = async (entry) => {
@@ -144,6 +162,12 @@ const saveCandidate = async (entry) => {
   if (entry.file) {
     const response = await request(`?id=${entry.id}&file=1`);
     const bytes = Buffer.from(await response.arrayBuffer());
+    // A damaged download must never count as saved, or the only good copy
+    // (the online one) would be deleted.
+    const intact = entry.file.sha256
+      ? createHash("sha256").update(bytes).digest("hex") === entry.file.sha256
+      : bytes.length === entry.file.size;
+    if (!intact) throw new Error(`the CV of ${entry.id} arrived damaged; it stays online`);
     const cvDir = path.join(config.outDir, "CV");
     await mkdir(cvDir, { recursive: true });
     const ext = ["pdf", "doc", "docx"].includes(entry.file.ext) ? entry.file.ext : "bin";
@@ -152,7 +176,7 @@ const saveCandidate = async (entry) => {
       .filter(Boolean)
       .join(" - ");
     const target = await freePath(cvDir, base, ext);
-    await writeFile(target, bytes, { flag: "wx" });
+    await writeFile(target, bytes, { flag: "wx", flush: true });
     await quarantine(target);
     cvName = path.basename(target);
   }
@@ -176,7 +200,12 @@ const saveRecruiter = async (entry) => {
 
 const main = async () => {
   const { ids } = await (await request("")).json();
-  const fresh = ids.filter((id) => ID_PATTERN.test(id) && !done.has(id));
+  const online = ids.filter((id) => ID_PATTERN.test(id));
+
+  // Finish what an interrupted run left behind: saved here but still online.
+  for (const id of online.filter((id) => done.has(id))) await removeOnline(id);
+
+  const fresh = online.filter((id) => !done.has(id));
   if (fresh.length === 0) return;
 
   await mkdir(config.outDir, { recursive: true });
@@ -190,6 +219,7 @@ const main = async () => {
     done.add(id);
     await saveState();
     log(`saved ${id} (${entry.kind})`);
+    await removeOnline(id);
   }
 
   if (summaries.length === 1) await notify("CREHER — nouvelle demande", summaries[0]);

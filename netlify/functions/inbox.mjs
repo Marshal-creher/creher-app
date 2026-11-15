@@ -1,7 +1,8 @@
 // Private endpoint used by the owner's Mac to collect what `submit` stored.
-//   GET /.netlify/functions/inbox              -> { ids: [...] }
-//   GET /.netlify/functions/inbox?id=ID        -> the stored entry (JSON)
-//   GET /.netlify/functions/inbox?id=ID&file=1 -> the CV bytes
+//   GET    /.netlify/functions/inbox              -> { ids: [...] }
+//   GET    /.netlify/functions/inbox?id=ID        -> the stored entry (JSON)
+//   GET    /.netlify/functions/inbox?id=ID&file=1 -> the CV bytes
+//   DELETE /.netlify/functions/inbox?id=ID        -> removes the entry and its CV
 // Every request needs "Authorization: Bearer <CREHER_INBOX_TOKEN>".
 import { getStore } from "@netlify/blobs";
 import { createHash, timingSafeEqual } from "node:crypto";
@@ -26,18 +27,28 @@ const authorized = (req) => {
 };
 
 export default async (req) => {
-  if (req.method !== "GET") return json(405, { error: "method_not_allowed" });
+  if (req.method !== "GET" && req.method !== "DELETE") {
+    return json(405, { error: "method_not_allowed" });
+  }
   if (!authorized(req)) return json(401, { error: "unauthorized" });
 
   const store = getStore({ name: "submissions", consistency: "strong" });
   const params = new URL(req.url).searchParams;
   const id = params.get("id");
 
-  if (!id) {
+  if (!id && req.method === "GET") {
     const { blobs } = await store.list({ prefix: "entry/" });
     return json(200, { ids: blobs.map((blob) => blob.key.slice("entry/".length)).sort() });
   }
-  if (!ID_PATTERN.test(id)) return json(400, { error: "bad_id" });
+  if (!id || !ID_PATTERN.test(id)) return json(400, { error: "bad_id" });
+
+  if (req.method === "DELETE") {
+    // The CV goes first. If the second delete fails, the entry is still listed
+    // and the Mac asks again, so a CV is never left behind where nothing lists it.
+    await store.delete(`file/${id}`);
+    await store.delete(`entry/${id}`);
+    return json(200, { ok: true });
+  }
 
   if (params.get("file") === "1") {
     const bytes = await store.get(`file/${id}`, { type: "arrayBuffer" });
