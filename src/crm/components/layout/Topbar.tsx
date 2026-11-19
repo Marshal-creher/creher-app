@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationsService } from '../../services/notifications.service'
 import { formatRelative } from '../../lib/utils'
+import { CompanySwitcher } from './CompanySwitcher'
 
 const PAGE_TITLES: Record<string, string> = {
   '/crm/dashboard': 'Tableau de Bord',
@@ -19,6 +20,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/crm/notifications': 'Notifications',
   '/crm/parametres': 'Paramètres',
   '/crm/utilisateurs': 'Gestion des Utilisateurs',
+  '/crm/entreprises': 'Entreprises suivies',
 }
 
 function getPageTitle(pathname: string): string {
@@ -84,9 +86,10 @@ export function Topbar() {
 
   return (
     <header className="fixed top-0 left-[240px] right-0 z-10 h-[64px] bg-white border-b border-gray-200 flex items-center px-6 gap-4">
-      {/* Page title */}
-      <div className="flex-1">
-        <h2 className="text-lg font-semibold text-gray-900">{pageTitle}</h2>
+      {/* Company being worked on, then page title */}
+      <CompanySwitcher />
+      <div className="flex-1 min-w-0">
+        <h2 className="text-lg font-semibold text-gray-900 truncate">{pageTitle}</h2>
       </div>
 
       <div className="flex items-center gap-2">

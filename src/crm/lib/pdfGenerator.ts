@@ -2,6 +2,8 @@
 // PDF Generator — INFINITAS HRM
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { payslipLines } from './payslipLines'
+
 // ── Page geometry — A4 contracts + payslips ───────────────────────────────────
 const PW          = 210   // A4 width mm
 const ML          = 18    // contracts / payslips — left margin
@@ -515,93 +517,62 @@ export async function generatePayslipPDF(payslip: Record<string,unknown>, compan
   row('CIN :',   String(payslip.cin||''),           c2, 10)
   row('CNSS :',  String(payslip.cnss_number||''),   c3, 14)
   y += 5
-  row('Poste :', String(payslip.position_title||''), ex, 14)
+  row('Poste :', String(payslip.position_title||payslip.position||''), ex, 14)
   row('Dépt :',  String(payslip.department||''),     c2, 12)
   y += 5
   row('Banque :', String(payslip.bank_name||''),     ex, 16)
   row('Compte :', String(payslip.bank_account||''),  c2, 16)
   y += 12
 
-  // ── Salary table ──────────────────────────────────────────────────────────
-  const RH = 8   // row height
+  // ── Salary table: Rubrique | Base | Taux | Gains | Retenues ───────────────
+  const RH = 6.2
+  const colBase = ML + 92, colRate = ML + 118, colGain = ML + 150, colDed = PW - MR - 2
+  const { lines, net, info } = payslipLines(payslip)
 
-  // Table header
-  fill(pdf, C.navy); pdf.rect(ML, y, CW, RH, 'F')
-  pdf.setFont('helvetica','bold'); pdf.setFontSize(9.5); ink(pdf, C.white)
-  pdf.text('RUBRIQUE',       ML + 5,      y + 5.5)
-  pdf.text('MONTANT (MAD)', PW - MR - 3, y + 5.5, {align:'right'})
-  y += RH
+  fill(pdf, C.navy); pdf.rect(ML, y, CW, RH + 1, 'F')
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(8.5); ink(pdf, C.white)
+  pdf.text('RUBRIQUE', ML + 3, y + 4.6)
+  pdf.text('BASE', colBase, y + 4.6, {align:'right'})
+  pdf.text('TAUX', colRate, y + 4.6, {align:'right'})
+  pdf.text('GAINS', colGain, y + 4.6, {align:'right'})
+  pdf.text('RETENUES', colDed, y + 4.6, {align:'right'})
+  y += RH + 1
 
-  const retMin = (payslip.retard_minutes  as number)||0
-  const retDed = (payslip.retard_deduction as number)||0
-
-  type TableRow = { label: string; amt: number; type: 'base'|'gain'|'total'|'ded' }
-  const rows: TableRow[] = [
-    { label: 'Salaire de base',                       amt: payslip.base_salary as number,           type: 'base' },
-    { label: 'Heures supplémentaires',                amt: (payslip.overtime_pay as number)||0,     type: 'gain' },
-    { label: 'Primes et avantages',                   amt: (payslip.bonuses as number)||0,          type: 'gain' },
-    { label: 'SALAIRE BRUT',                          amt: payslip.gross_salary as number,          type: 'total'},
-    { label: '— CNSS salarié (4,29 %)',               amt: payslip.cnss_employee as number,         type: 'ded'  },
-    { label: '— AMO salarié (2,20 %)',                amt: payslip.amo_employee as number,          type: 'ded'  },
-    { label: '— IGR / Impôt sur le revenu',           amt: payslip.igr as number,                   type: 'ded'  },
-    ...(retDed > 0 ? [{ label: `— Retard (${retMin} min)`, amt: retDed, type: 'ded' as const }] : []),
-    { label: '— Avance sur salaire',                  amt: (payslip.avance_deduction as number)||0, type: 'ded'  },
-    { label: '— Autres retenues',                     amt: (payslip.other_deductions as number)||0, type: 'ded'  },
-  ]
-
-  rows.forEach((r, i) => {
-    const bg = r.type === 'total' ? C.totoal : i%2===0 ? C.white : C.bgrow
-    fill(pdf, bg); pdf.rect(ML, y, CW, RH, 'F')
-
-    // Accent dot
-    if (r.type === 'ded') { fill(pdf, C.red);   pdf.circle(ML+3, y+RH/2, 0.9, 'F') }
-    if (r.type === 'gain'){ fill(pdf, C.green);  pdf.circle(ML+3, y+RH/2, 0.9, 'F') }
-
-    const bold = r.type === 'total'
-    pdf.setFont('helvetica', bold ? 'bold' : 'normal')
-    pdf.setFontSize(bold ? 10 : 9.5)
-
-    const lc = r.type==='ded' ? C.red : r.type==='total' ? C.dark : C.dark
-    ink(pdf, lc)
-    pdf.text(r.label, ML+7, y+5.5)
-
-    const astr = r.type==='ded' ? `- ${fmt(r.amt)}` : fmt(r.amt)
-    ink(pdf, r.type==='ded' ? C.red : r.type==='total' ? C.navy : C.dark)
-    pdf.text(astr, PW-MR-3, y+5.5, {align:'right'})
-
-    stroke(pdf, C.lgray); pdf.setLineWidth(0.2); pdf.line(ML, y+RH, PW-MR, y+RH)
+  lines.forEach((r, i) => {
+    const subtotal = r.kind === 'subtotal'
+    fill(pdf, subtotal ? C.totoal : i % 2 === 0 ? C.white : C.bgrow); pdf.rect(ML, y, CW, RH, 'F')
+    pdf.setFont('helvetica', subtotal ? 'bold' : 'normal'); pdf.setFontSize(8.2); ink(pdf, C.dark)
+    pdf.text(r.label, ML + 3, y + 4.3)
+    ink(pdf, C.gray)
+    if (r.base) pdf.text(r.base, colBase, y + 4.3, {align:'right'})
+    if (r.rate) pdf.text(r.rate, colRate, y + 4.3, {align:'right'})
+    if (r.gain !== undefined) { ink(pdf, subtotal ? C.navy : C.dark); pdf.text(fmt(r.gain), colGain, y + 4.3, {align:'right'}) }
+    if (r.deduction !== undefined) { ink(pdf, C.red); pdf.text(fmt(r.deduction), colDed, y + 4.3, {align:'right'}) }
+    stroke(pdf, C.lgray); pdf.setLineWidth(0.15); pdf.line(ML, y + RH, PW - MR, y + RH)
     y += RH
   })
 
   // Net salary bar
   y += 3
-  fill(pdf, C.green); pdf.roundedRect(ML, y, CW, 13, 2, 2, 'F')
-  pdf.setFont('helvetica','bold'); pdf.setFontSize(12); ink(pdf, C.white)
-  pdf.text('SALAIRE NET À PAYER', ML+5, y+8.5)
-  pdf.setFontSize(13)
-  pdf.text(`${fmt(payslip.net_salary as number)} MAD`, PW-MR-3, y+8.5, {align:'right'})
-  y += 18
+  fill(pdf, C.green); pdf.roundedRect(ML, y, CW, 11, 2, 2, 'F')
+  pdf.setFont('helvetica','bold'); pdf.setFontSize(11); ink(pdf, C.white)
+  pdf.text('SALAIRE NET À PAYER', ML + 5, y + 7.3)
+  pdf.setFontSize(12)
+  pdf.text(`${fmt(net)} MAD`, PW - MR - 3, y + 7.3, {align:'right'})
+  y += 15
 
-  // Attendance chips
-  const dW  = (payslip.days_worked as number)||0
-  const dA  = (payslip.days_absent as number)||0
-  const chips: {label:string; val:string; color: readonly[number,number,number]}[] = [
-    { label:'Jours ouvrables',  val:String(dW+dA),    color: C.gray  },
-    { label:'Jours travaillés', val:String(dW),        color: C.green },
-    { label:'Jours absents',    val:String(dA),        color: dA>0 ? C.red : C.gray },
-    ...(retMin > 0 ? [{ label:'Retard', val:`${retMin} min`, color:[180,100,0] as const }] : []),
-  ]
-  const cW2 = (CW - (chips.length-1)*4) / chips.length
-  chips.forEach((ch, i) => {
-    const cx2 = ML + i*(cW2+4)
-    pdf.setFillColor(248,248,250); pdf.setDrawColor(ch.color[0],ch.color[1],ch.color[2]); pdf.setLineWidth(0.5)
-    pdf.roundedRect(cx2, y, cW2, 13, 2, 2, 'FD')
-    pdf.setFont('helvetica','bold'); pdf.setFontSize(11); ink(pdf, ch.color)
-    pdf.text(ch.val, cx2+cW2/2, y+7, {align:'center'})
-    pdf.setFont('helvetica','normal'); pdf.setFontSize(6.5); ink(pdf, C.gray)
-    pdf.text(ch.label, cx2+cW2/2, y+11.5, {align:'center'})
+  // Tax and attendance figures
+  const cW2 = (CW - (info.length - 1) * 3) / info.length
+  info.forEach((item, i) => {
+    const cx2 = ML + i * (cW2 + 3)
+    pdf.setFillColor(248,248,250); stroke(pdf, C.lgray); pdf.setLineWidth(0.3)
+    pdf.roundedRect(cx2, y, cW2, 11, 1.5, 1.5, 'FD')
+    pdf.setFont('helvetica','bold'); pdf.setFontSize(8.5); ink(pdf, C.navy)
+    pdf.text(item.value, cx2 + cW2 / 2, y + 5, {align:'center'})
+    pdf.setFont('helvetica','normal'); pdf.setFontSize(6); ink(pdf, C.gray)
+    pdf.text(item.label, cx2 + cW2 / 2, y + 9, {align:'center', maxWidth: cW2 - 2})
   })
-  y += 18
+  y += 16
 
   // Signature
   const gName  = (company.gerant_name  as string)||''

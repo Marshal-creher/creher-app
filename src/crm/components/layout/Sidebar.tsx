@@ -15,6 +15,7 @@ import {
   ChevronRight,
   CreditCard,
   UserPlus,
+  Building2,
 } from 'lucide-react'
 import { cn, getInitials } from '../../lib/utils'
 import { useAuth } from '../../hooks/useAuth'
@@ -105,6 +106,12 @@ const navGroups = [
     label: 'ADMINISTRATION',
     items: [
       {
+        path: '/crm/entreprises',
+        label: 'Entreprises',
+        icon: <Building2 className="h-4 w-4" />,
+        allCompaniesOnly: true,
+      },
+      {
         path: '/crm/parametres',
         label: 'Paramètres',
         icon: <Settings className="h-4 w-4" />,
@@ -157,6 +164,10 @@ export function Sidebar() {
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         {navGroups.map((group) => {
           const visibleItems = group.items.filter(item => {
+            if ('allCompaniesOnly' in item && item.allCompaniesOnly) {
+              // CREHER admin accounts only: client accounts see one company
+              return hasRole(['admin']) && !user?.company_id
+            }
             if ('adminOnly' in item && item.adminOnly) {
               return hasRole(['admin'])
             }

@@ -12,6 +12,21 @@ export const settingsService = {
     return response.data.data
   },
 
+  async getPayrollParams(): Promise<{ params: Record<string, unknown>; defaults: Record<string, unknown>; customized: boolean }> {
+    const response = await api.get('/settings/payroll-params')
+    return response.data.data
+  },
+
+  async updatePayrollParams(data: Record<string, unknown>) {
+    const response = await api.put('/settings/payroll-params', data)
+    return response.data.data
+  },
+
+  async resetPayrollParams() {
+    const response = await api.delete('/settings/payroll-params')
+    return response.data.data
+  },
+
   async uploadLogo(file: File): Promise<CompanySettings> {
     const formData = new FormData()
     formData.append('logo', file)

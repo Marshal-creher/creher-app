@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import type { User } from '../types'
 import api from '../lib/axios'
+import { setSelectedCompanyId } from '../lib/company'
 
 interface AuthData {
   token: string
@@ -53,6 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { token: newToken, user: newUser } = response.data.data
 
+    // A client account works on its own company only
+    if (newUser.company_id) setSelectedCompanyId(newUser.company_id)
+
     setToken(newToken)
     setUser(newUser)
 
@@ -63,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null)
     setUser(null)
     localStorage.removeItem(AUTH_KEY)
+    setSelectedCompanyId(null)
 
     // Call logout endpoint (fire and forget)
     api.post('/auth/logout').catch(() => {})

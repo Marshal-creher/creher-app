@@ -38,6 +38,7 @@ export const authService = {
     password: string
     role: string
     employee_id?: number | null
+    company_id?: number | null
   }): Promise<User> {
     const response = await api.post<ApiResponse<User>>('/auth/users', data)
     return response.data.data

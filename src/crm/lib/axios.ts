@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getSelectedCompanyId } from './company'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? '/api',
@@ -22,6 +23,8 @@ api.interceptors.request.use(
         // Invalid JSON, ignore
       }
     }
+    const companyId = getSelectedCompanyId()
+    if (companyId) config.headers['X-Company-Id'] = String(companyId)
     return config
   },
   (error) => Promise.reject(error)

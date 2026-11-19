@@ -35,7 +35,8 @@ interface PayrollRun {
   period_year: number
   status: string
   created_at: string
-  employee_count: number
+  employee_count?: number
+  payslip_count?: number
   total_gross: number
   total_net: number
   notes?: string
@@ -44,30 +45,33 @@ interface PayrollRun {
 interface ExcelRow {
   employee_code: string
   employee_name?: string
-  jours_travailles?: number
-  jours_absents?: number
-  heures_sup?: number
-  primes?: number
-  retenues_autres?: number
   _matched?: boolean
 }
 
+// Headers of the reference workbook's "Paie" sheet: the server recognises them,
+// so the workbook itself can be imported. The template only carries the
+// month's variables: contract elements (panier, transport…) are taken from the
+// previous month, and a blank cell in a column of the file counts as 0.
+const TEMPLATE_HEADERS = [
+  'Matricule', 'NOM & PRENOM', 'JOURS ABSENCE NON PAYÉE (nb)', 'JOURS DE CONGÉ PRIS (nb)', 'Nb heures supp.',
+  'Nb jours fériés travaillés', 'Nb jours supp.', 'Nb jours régul. (oubli)', 'RELIQUAT M-1 (brut)',
+  'Jours non inclus panier (nb)', 'BONUS BRUT', 'BONUS BRUT 5%', 'COMMISSION BRUT', 'MALUS BRUT (déduit)',
+  'PRIME DE NUIT NET CIBLE', 'COMMISSION NET CIBLE', 'BONUS NET CIBLE', 'Bonus NET 5%', 'MALUS NET CIBLE (déduit)',
+]
+
 function downloadTemplate(employees: Array<{ employee_code: string; first_name: string; last_name: string }>) {
-  const rows = employees.map(e => ({
-    'employee_code': e.employee_code,
-    'Nom Employé': `${e.first_name} ${e.last_name}`,
-    'jours_travailles': '',
-    'jours_absents': '',
-    'heures_sup': '',
-    'primes': '',
-    'retenues_autres': '',
-  }))
+  const rows = [
+    TEMPLATE_HEADERS,
+    ...employees.map(e => [e.employee_code, `${e.last_name} ${e.first_name}`]),
+  ]
   const wb = XLSX.utils.book_new()
-  const ws = XLSX.utils.json_to_sheet(rows)
-  ws['!cols'] = [{ wch: 14 }, { wch: 24 }, { wch: 16 }, { wch: 14 }, { wch: 12 }, { wch: 10 }, { wch: 16 }]
+  const ws = XLSX.utils.aoa_to_sheet(rows)
+  ws['!cols'] = TEMPLATE_HEADERS.map((h, i) => ({ wch: i === 1 ? 28 : Math.max(10, Math.min(h.length + 2, 30)) }))
   XLSX.utils.book_append_sheet(wb, ws, 'Paie')
-  XLSX.writeFile(wb, 'modele_import_paie.xlsx')
+  XLSX.writeFile(wb, 'modele_variables_paie.xlsx')
 }
+
+const normalizeLabel = (v: unknown) => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 
 export function SalairesPage() {
   const navigate = useNavigate()
@@ -148,22 +152,23 @@ export function SalairesPage() {
     const reader = new FileReader()
     reader.onload = (ev) => {
       const wb = XLSX.read(ev.target?.result, { type: 'array' })
-      const ws = wb.Sheets[wb.SheetNames[0]]
-      const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(ws)
+      const sheetName = wb.SheetNames.find(n => normalizeLabel(n) === 'paie') ?? wb.SheetNames[0]
+      const raw = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[sheetName], { header: 1, defval: null })
+      const codeHeaders = ['matricule', 'employee code', 'code employe', 'code']
+      const headerIndex = raw.slice(0, 15).findIndex(r => r.some(c => codeHeaders.includes(normalizeLabel(c))))
+      if (headerIndex < 0) {
+        toast.error('Colonne « Matricule » introuvable dans le fichier')
+        setImportRows([])
+        return
+      }
+      const header = raw[headerIndex].map(normalizeLabel)
+      const codeCol = header.findIndex(h => codeHeaders.includes(h))
+      const nameCol = header.findIndex(h => ['nom prenom', 'nom employe', 'employee name', 'nom'].includes(h))
       const empCodes = new Set(employees.map(e => e.employee_code))
-      const parsed: ExcelRow[] = raw.map(row => {
-        const code = String(row['employee_code'] ?? row['Code Employé'] ?? row['code'] ?? '').trim()
-        return {
-          employee_code: code,
-          employee_name: String(row['Nom Employé'] ?? row['employee_name'] ?? ''),
-          jours_travailles: row['jours_travailles'] != null ? Number(row['jours_travailles']) : undefined,
-          jours_absents: row['jours_absents'] != null ? Number(row['jours_absents']) : undefined,
-          heures_sup: row['heures_sup'] != null ? Number(row['heures_sup']) : undefined,
-          primes: row['primes'] != null ? Number(row['primes']) : undefined,
-          retenues_autres: row['retenues_autres'] != null ? Number(row['retenues_autres']) : undefined,
-          _matched: empCodes.has(code),
-        }
-      })
+      const parsed: ExcelRow[] = raw.slice(headerIndex + 1)
+        .map(row => ({ code: String(row[codeCol] ?? '').trim(), name: nameCol >= 0 ? String(row[nameCol] ?? '') : '' }))
+        .filter(r => r.code && normalizeLabel(r.code) !== 'total')
+        .map(r => ({ employee_code: r.code, employee_name: r.name, _matched: empCodes.has(r.code) }))
       setImportRows(parsed)
     }
     reader.readAsArrayBuffer(file)
@@ -230,7 +235,7 @@ export function SalairesPage() {
           <StatsCard
             icon={<Users />}
             label="Nombre d'employés"
-            value={latestRun.employee_count ?? 0}
+            value={latestRun.employee_count ?? latestRun.payslip_count ?? 0}
             iconBgColor="bg-indigo-50"
             iconColor="text-indigo-600"
           />
@@ -293,7 +298,7 @@ export function SalairesPage() {
                         {getStatusLabel(run.status)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right text-gray-600">{run.employee_count ?? '-'}</td>
+                    <td className="px-6 py-4 text-right text-gray-600">{run.employee_count ?? run.payslip_count ?? '-'}</td>
                     <td className="px-6 py-4 text-right text-gray-900 font-medium">{formatCurrency(run.total_gross)}</td>
                     <td className="px-6 py-4 text-right text-emerald-700 font-semibold">{formatCurrency(run.total_net)}</td>
                     <td className="px-6 py-4">
@@ -468,12 +473,7 @@ export function SalairesPage() {
                     <tr className="bg-gray-50 text-gray-500 uppercase tracking-wide">
                       <th className="px-3 py-2 text-left">Code</th>
                       <th className="px-3 py-2 text-left">Nom</th>
-                      <th className="px-3 py-2 text-right">J. Trav.</th>
-                      <th className="px-3 py-2 text-right">J. Abs.</th>
-                      <th className="px-3 py-2 text-right">H. Sup</th>
-                      <th className="px-3 py-2 text-right">Primes</th>
-                      <th className="px-3 py-2 text-right">Retenues</th>
-                      <th className="px-3 py-2 text-center">Statut</th>
+                      <th className="px-3 py-2 text-center">Salarié trouvé</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -481,11 +481,6 @@ export function SalairesPage() {
                       <tr key={i} className={row._matched ? 'bg-white' : 'bg-red-50'}>
                         <td className="px-3 py-2 font-mono font-medium">{row.employee_code}</td>
                         <td className="px-3 py-2 text-gray-700">{row.employee_name}</td>
-                        <td className="px-3 py-2 text-right">{row.jours_travailles ?? '—'}</td>
-                        <td className="px-3 py-2 text-right">{row.jours_absents ?? '—'}</td>
-                        <td className="px-3 py-2 text-right">{row.heures_sup ?? '—'}</td>
-                        <td className="px-3 py-2 text-right">{row.primes != null ? `${row.primes} dh` : '—'}</td>
-                        <td className="px-3 py-2 text-right">{row.retenues_autres != null ? `${row.retenues_autres} dh` : '—'}</td>
                         <td className="px-3 py-2 text-center">
                           {row._matched
                             ? <CheckCircle className="h-4 w-4 text-emerald-500 mx-auto" />
@@ -500,8 +495,10 @@ export function SalairesPage() {
           )}
 
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-xs text-blue-700">
-            <strong>Colonnes acceptées :</strong> employee_code, jours_travailles, jours_absents, heures_sup, primes, retenues_autres.<br />
-            Les colonnes manquantes sont calculées automatiquement depuis le pointage ou supposées à zéro.
+            <strong>Fichiers acceptés :</strong> le modèle ci-dessus, ou directement le classeur « Payroll File Requalibré »
+            (onglet Paie) : les salariés sont reconnus par leur matricule et toutes ses colonnes de saisie sont reprises.<br />
+            Une colonne présente dans le fichier remplace la valeur du HRM (cellule vide = 0). Les colonnes absentes gardent
+            les valeurs préremplies : pointage du mois, primes du contrat reprises du mois précédent.
           </div>
         </ModalBody>
         <ModalFooter>

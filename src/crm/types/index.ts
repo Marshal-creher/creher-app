@@ -13,6 +13,8 @@ export interface User {
   first_name?: string
   last_name?: string
   photo_path?: string
+  company_id?: number | null    // null = CREHER account, every company
+  company_name?: string | null
 }
 
 // =============================================

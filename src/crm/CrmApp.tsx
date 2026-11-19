@@ -39,6 +39,7 @@ import { UtilisateursPage } from './pages/UtilisateursPage'
 import AvancesPage from './pages/AvancesPage'
 import { PayrollRunDetailPage } from './pages/salaires/PayrollRunDetailPage'
 import { RecrutementPage } from './pages/RecrutementPage'
+import { EntreprisesPage } from './pages/EntreprisesPage'
 
 // Dedicated QueryClient for the CRM (isolated from the CREHER site's client)
 const crmQueryClient = new QueryClient({
@@ -144,6 +145,14 @@ function CrmRoutes() {
             element={
               <AdminRoute>
                 <UtilisateursPage />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="entreprises"
+            element={
+              <AdminRoute>
+                <EntreprisesPage />
               </AdminRoute>
             }
           />

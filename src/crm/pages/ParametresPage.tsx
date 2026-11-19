@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { Building2, Settings, Shield, Save, Upload, FileText, Layers, Plus, Pencil, Trash2, X, Check } from 'lucide-react'
+import { Building2, Settings, Shield, Save, Upload, FileText, Layers, Plus, Pencil, Trash2, X, Check, Calculator } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { settingsService } from '../services/settings.service'
 import { authService } from '../services/auth.service'
@@ -13,13 +13,15 @@ import { PageLoader } from '../components/ui/Spinner'
 import { StatusBadge } from '../components/ui/Badge'
 import { formatDate } from '../lib/utils'
 import type { CompanySettings, User, Department, Position } from '../types'
+import { PayrollParamsForm } from '../components/PayrollParamsForm'
 
-type TabId = 'entreprise' | 'documents' | 'config_rh' | 'departements' | 'utilisateurs'
+type TabId = 'entreprise' | 'documents' | 'config_rh' | 'paie' | 'departements' | 'utilisateurs'
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'entreprise', label: 'Entreprise', icon: <Building2 className="h-4 w-4" /> },
   { id: 'documents', label: 'Documents & PDF', icon: <FileText className="h-4 w-4" /> },
   { id: 'config_rh', label: 'Configuration RH', icon: <Settings className="h-4 w-4" /> },
+  { id: 'paie', label: 'Paramètres de paie', icon: <Calculator className="h-4 w-4" /> },
   { id: 'departements', label: 'Départements & Postes', icon: <Layers className="h-4 w-4" /> },
   { id: 'utilisateurs', label: 'Utilisateurs', icon: <Shield className="h-4 w-4" /> },
 ]
@@ -63,7 +65,7 @@ export function ParametresPage() {
     <div className="max-w-4xl mx-auto space-y-5">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
-        <p className="text-sm text-gray-500 mt-1">Configurez votre système INFINITAS HRM</p>
+        <p className="text-sm text-gray-500 mt-1">Paramètres de l'entreprise sélectionnée{settings?.name ? ` : ${settings.name}` : ''}</p>
       </div>
 
       {/* Tabs */}
@@ -102,6 +104,10 @@ export function ParametresPage() {
 
       {activeTab === 'config_rh' && settings && (
         <HRConfigForm settings={settings} onSave={(data) => updateSettingsMutation.mutate(data)} saving={updateSettingsMutation.isPending} />
+      )}
+
+      {activeTab === 'paie' && (
+        <PayrollParamsForm />
       )}
 
       {activeTab === 'departements' && (
@@ -458,21 +464,16 @@ function HRConfigForm({
 
         <Card>
           <CardHeader>
-            <h2 className="text-sm font-semibold text-gray-900">Paramètres de Paie — LF 2026</h2>
+            <h2 className="text-sm font-semibold text-gray-900">Mutuelle</h2>
           </CardHeader>
           <CardBody className="space-y-4">
-            <div className="grid grid-cols-3 gap-4 text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
-              <div>CNSS salarié : <span className="font-semibold text-gray-800">4,48%</span></div>
-              <div>AMO salarié : <span className="font-semibold text-gray-800">2,26%</span></div>
-              <div>SMIG brut : <span className="font-semibold text-gray-800">3 422,72 MAD</span></div>
-            </div>
             <Input
               label="Taux Mutuelle Privée par défaut (%)"
               type="number"
               min="0"
               max="20"
               step="0.01"
-              hint="Entrez 0 pour désactiver la mutuelle. Modifiable par bulletin de paie."
+              hint="Part salariale, en % du brut imposable, retenue sur le net. 0 = pas de mutuelle. Les autres taux sont dans l'onglet Paramètres de paie."
               {...register('mutuelle_rate', { valueAsNumber: true })}
             />
           </CardBody>

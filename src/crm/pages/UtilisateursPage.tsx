@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Plus, Shield } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { authService } from '../services/auth.service'
+import { companiesService } from '../services/companies.service'
+import { getSelectedCompanyId } from '../lib/company'
 import { Button } from '../components/ui/Button'
 import { Modal, ModalBody, ModalFooter } from '../components/ui/Modal'
 import { Input } from '../components/ui/Input'
@@ -15,11 +17,17 @@ import type { User } from '../types'
 export function UtilisateursPage() {
   const queryClient = useQueryClient()
   const [showModal, setShowModal] = useState(false)
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    role: 'employee',
-  })
+  // New accounts default to the company on screen (least access); "all" is
+  // only for CREHER staff.
+  const emptyForm = () => ({ email: '', password: '', role: 'employee', company: String(getSelectedCompanyId() ?? '') })
+  const [formData, setFormData] = useState(emptyForm)
+
+  const { data: companiesData } = useQuery({ queryKey: ['companies'], queryFn: companiesService.list })
+  const canChooseCompany = Boolean(companiesData?.allCompaniesAccess)
+  const companyOptions = [
+    ...(companiesData?.companies ?? []).filter((c) => c.active).map((c) => ({ value: String(c.id), label: c.name })),
+    { value: 'all', label: 'Toutes les entreprises (compte CREHER)' },
+  ]
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ['users'],
@@ -27,14 +35,19 @@ export function UtilisateursPage() {
   })
 
   const createMutation = useMutation({
-    mutationFn: authService.createUser,
+    mutationFn: () => authService.createUser({
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+      company_id: formData.company && formData.company !== 'all' ? Number(formData.company) : null,
+    }),
     onSuccess: () => {
       toast.success('Utilisateur créé avec succès')
       queryClient.invalidateQueries({ queryKey: ['users'] })
       setShowModal(false)
-      setFormData({ email: '', password: '', role: 'employee' })
+      setFormData(emptyForm())
     },
-    onError: () => toast.error('Erreur lors de la création'),
+    onError: (err: any) => toast.error(err?.response?.data?.error || 'Erreur lors de la création'),
   })
 
   const toggleActiveMutation = useMutation({
@@ -70,6 +83,7 @@ export function UtilisateursPage() {
             <tr>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Utilisateur</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Rôle</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Entreprise</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Statut</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Créé le</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Connexion</th>
@@ -97,6 +111,9 @@ export function UtilisateursPage() {
                     {user.role === 'admin' ? 'Administrateur' :
                      user.role === 'hr_manager' ? 'Responsable RH' : 'Employé'}
                   </span>
+                </td>
+                <td className="px-4 py-3 text-xs text-gray-700">
+                  {user.company_id ? user.company_name : <span className="text-indigo-700 font-medium">Toutes (CREHER)</span>}
                 </td>
                 <td className="px-4 py-3">
                   <StatusBadge status={user.active ? 'ACTIF' : 'TERMINE'} />
@@ -147,6 +164,17 @@ export function UtilisateursPage() {
             value={formData.role}
             onChange={(e) => setFormData({ ...formData, role: e.target.value })}
           />
+          {canChooseCompany && (
+            <Select
+              label="Accès"
+              options={companyOptions}
+              value={formData.company || 'all'}
+              onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            />
+          )}
+          <p className="text-xs text-gray-500">
+            Un compte rattaché à une entreprise ne voit que celle-ci : c'est l'accès à donner à un client.
+          </p>
         </ModalBody>
         <ModalFooter>
           <Button variant="outline" onClick={() => setShowModal(false)}>
@@ -155,7 +183,7 @@ export function UtilisateursPage() {
           <Button
             variant="primary"
             loading={createMutation.isPending}
-            onClick={() => createMutation.mutate(formData)}
+            onClick={() => createMutation.mutate()}
           >
             Créer
           </Button>

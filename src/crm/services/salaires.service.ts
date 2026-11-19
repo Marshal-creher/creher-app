@@ -25,6 +25,12 @@ export const salairesService = {
   updatePayslip: (payslip_id: number, data: object) =>
     api.put(`/salaires/payslip/${payslip_id}`, data).then(r => r.data.data),
 
+  getSummary: (run_id: number) =>
+    api.get(`/salaires/${run_id}/employer-summary`).then(r => r.data.data),
+
+  recalculate: (run_id: number) =>
+    api.post(`/salaires/${run_id}/recalculate`).then(r => r.data.data),
+
   markRunAsPaid: (run_id: number, data: { payment_date: string; payment_method?: string }) =>
     api.put(`/salaires/${run_id}/pay`, data).then(r => r.data.data),
 
